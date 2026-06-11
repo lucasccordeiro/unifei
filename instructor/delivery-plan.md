@@ -137,8 +137,9 @@ bound; (5, stretch) expose a concurrency bug via interleaving search.
 ## Preparation
 
 - **Instructor:** TAs briefed (1 per ~15 students); whiteboard scoreboard
-  for Lab 4; `solutions/` folder open on your machine; venue dry-run of
-  `labs/` top to bottom.
+  for Lab 4; `solutions/` folder open on your machine; the solution-reveal
+  deck [`session2-solutions.pptx`](session2-solutions.pptx) loaded (one
+  reveal block per lab); venue dry-run of `labs/` top to bottom.
 - **Students:** [`../handouts/setup.md`](../handouts/setup.md) completed.
   Doors open 17:45 for triage.
 

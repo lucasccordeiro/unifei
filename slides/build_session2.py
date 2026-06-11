@@ -62,6 +62,55 @@ add_body(s, [
     "Predict before every run: write your guess as a comment first.",
 ])
 
+s = add_slide(prs, "Z3's Python API — the whole toolkit")
+add_body(s, [
+    ("from z3 import Bools, Ints, BitVec, Solver, sat, unsat", 0, True),
+    ("a, b = Bools(\"a b\")     # symbolic booleans, not values", 0, True),
+    ("x = BitVec(\"x\", 32)     # a 32-bit machine integer", 0, True),
+    ("", 0, True),
+    ("s = Solver()", 0, True),
+    ("s.add(formula)           # constrain", 0, True),
+    ("s.check()                # -> sat or unsat", 0, True),
+    ("s.model()                # the witness, when sat", 0, True),
+    "",
+    "Every stage of lab1.py is these five calls — nothing else.",
+])
+
+s = add_slide(prs, "Walkthrough: equivalent() from lab1.py")
+add_body(s, [
+    ("def equivalent(lhs, rhs, name):", 0, True),
+    ("    slv = Solver()", 0, True),
+    ("    slv.add(lhs != rhs)            # can they EVER differ?", 0, True),
+    ("    if slv.check() == unsat:       # never differ: a proof",
+     0, True),
+    ("        print(name, \"EQUIVALENT\")", 0, True),
+    ("    else:                          # a witness they differ",
+     0, True),
+    ("        print(name, slv.model())", 0, True),
+    "",
+    ("1a De Morgan: EQUIVALENT   ·   1b distribution: EQUIVALENT", 1),
+    ("1c trick question: NOT equivalent, counterexample: [b = False]",
+     1, True),
+    ("Read the model: with b = False, a → (b → a) is true but b is "
+     "false.", 1),
+])
+
+s = add_slide(prs, "Walkthrough: Stage 3 is ESBMC by hand")
+add_body(s, [
+    ("x, y, z = BitVec(\"x\", 32), BitVec(\"y\", 32), BitVec(\"z\", 32)",
+     0, True),
+    ("s.add(y == x + 1)        # int y = x + 1;", 0, True),
+    ("s.add(z == y * 2)        # int z = y * 2;", 0, True),
+    ("s.add(Not(z >= 2))       # assert(z >= 2) — NEGATED", 0, True),
+    "",
+    ("sat — counterexample e.g. x = 1073741824 (= 2^30)", 0, True),
+    ("y * 2 overflows the 32-bit range: z comes out negative.", 1),
+    "Would your test suite have tried 1073741824?",
+    "",
+    "ESBMC builds exactly this formula from your C — automatically. "
+    "That's Lab 2.",
+])
+
 s = add_slide(prs, "Checkpoint before Lab 2")
 add_body(s, [
     "What does unsat mean in Stage 1?",
@@ -88,17 +137,57 @@ add_body(s, ["Done = VERIFICATION SUCCESSFUL on your fixed file, same "
 
 s = add_slide(prs, "How to read a counterexample")
 add_body(s, [
-    ("State 3  file overflow.c  line 21 ...", 0, True),
-    ("  i = 2 (00000000 ... 010)        ← inputs the solver chose", 0, True),
-    ("...", 0, True),
-    ("Violated property:", 0, True),
-    ("  dereference failure: array bounds violated   ← what broke", 0, True),
-    ("  CWE: CWE-121, CWE-125, ...                    ← the vuln class",
+    "Real output — esbmc getpassword.c --unwind 8:",
+    ("State 1 file getpassword.c line 18 function getPassword thread 0",
      0, True),
+    ("  buf = { 0, 0, 0, 0 }              ← the state so far", 0, True),
+    ("State 2 file ...library/io.c line 91 function gets thread 0",
+     0, True),
+    ("Violated property:", 0, True),
+    ("  dereference failure: array bounds violated   ← what broke",
+     0, True),
+    ("  CWE: CWE-121, CWE-125, CWE-129, ...           ← the vuln class",
+     0, True),
+    ("VERIFICATION FAILED", 0, True),
     "",
     "Read bottom-up: what was violated, then scroll up for which "
     "values caused it.",
-    "Those values are a ready-made failing test case — keep them.",
+])
+
+s = add_slide(prs, "Deep dive: overflow.c — the trace")
+add_body(s, [
+    ("State 1 ...  a = { 0, -1 }   ← stack garbage in the array",
+     0, True),
+    ("State 2 ...  i = -1          ← the index the solver chose",
+     0, True),
+    ("State 3 ...  x = -1          ← the branch the solver chose",
+     0, True),
+    ("Violated property:", 0, True),
+    ("  file overflow.c line 24 ... assertion main", 0, True),
+    ("  !((_Bool)((signed long int)(!(p[1] == 1))))", 0, True),
+    "",
+    ("x = -1 takes the else branch; a[i + 1] with i = -1 writes a[0].",
+     1),
+    ("So a[1] keeps its garbage (-1) and assert(*(p + 1) == 1) dies.",
+     1),
+    "i = -1, x = -1 is a ready-made failing test case — keep it.",
+])
+
+s = add_slide(prs, "Deep dive: what broke, and its CWE")
+add_body(s, [
+    "Two shapes of violated property:",
+    ("an assertion — names YOUR line:", 1),
+    ("  overflow.c line 24 ... assertion main", 1, True),
+    ("a built-in check — names the bug kind plus its CWE classes:", 1),
+    ("  dereference failure: array bounds violated", 1, True),
+    ("  CWE: CWE-121, CWE-125, CWE-129, CWE-131, CWE-193, CWE-787",
+     1, True),
+    ("  (stack overflow · OOB read · bad index · size miscalc · "
+     "off-by-one · OOB write)", 2),
+    "",
+    "The path may point inside ESBMC's model of the C library "
+    "(io.c line 91 = the gets model).",
+    ("That names the API you misused — it is not a bug in ESBMC.", 1),
 ])
 
 s = add_slide(prs, "Break — back at 19:40", lead=True)

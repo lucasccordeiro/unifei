@@ -41,7 +41,7 @@ style: |
 | 18:50 | **Lab 2** | Bug hunting with ESBMC |
 | 19:30 | *Break* | |
 | 19:40 | **Lab 3** | Writing your own specifications |
-| 20:15 | **Lab 4** | Team challenge 🏆 |
+| 20:15 | **Lab 4** | Team challenge |
 | 20:45 | | Debrief + where next |
 
 Work in **pairs** · keep `labs/CHEATSHEET.md` open · **predict before you run**
@@ -74,6 +74,60 @@ specifications — is this one move in different costumes.
 
 ---
 
+# Z3's Python API — the whole toolkit
+
+```python
+from z3 import Bools, Ints, BitVec, Solver, sat, unsat
+a, b = Bools("a b")     # symbolic booleans, not values
+x = BitVec("x", 32)     # a 32-bit machine integer
+
+s = Solver()
+s.add(formula)           # constrain
+s.check()                # -> sat or unsat
+s.model()                # the witness, when sat
+```
+
+Every stage of `lab1.py` is these five calls — nothing else.
+
+---
+
+# Walkthrough: `equivalent()` from lab1.py
+
+```python
+def equivalent(lhs, rhs, name):
+    slv = Solver()
+    slv.add(lhs != rhs)            # can they EVER differ?
+    if slv.check() == unsat:       # never differ: a proof
+        print(name, "EQUIVALENT")
+    else:                          # a witness they differ
+        print(name, slv.model())
+```
+
+- 1a De Morgan: EQUIVALENT · 1b distribution: EQUIVALENT
+- 1c trick question: `NOT equivalent, counterexample: [b = False]`
+- Read the model: with `b = False`, `a → (b → a)` is true but `b` is false.
+
+---
+
+# Walkthrough: Stage 3 is ESBMC by hand
+
+```python
+x, y, z = BitVec("x", 32), BitVec("y", 32), BitVec("z", 32)
+s.add(y == x + 1)        # int y = x + 1;
+s.add(z == y * 2)        # int z = y * 2;
+s.add(Not(z >= 2))       # assert(z >= 2) — NEGATED
+```
+
+`sat` — counterexample e.g. `x = 1073741824` (= 2³⁰)
+
+- `y * 2` overflows the 32-bit range: `z` comes out negative.
+
+Would your test suite have tried 1073741824?
+
+**ESBMC builds exactly this formula from your C — automatically. That's Lab 2.**
+
+---
+
 # Checkpoint before Lab 2
 
 ## What does `unsat` mean in Stage 1?
@@ -102,17 +156,55 @@ Finished early? You are now a TA — help the pair next to you.
 
 # How to read a counterexample
 
+Real output — `esbmc getpassword.c --unwind 8`:
+
 ```
-State 3  file overflow.c  line 21 ...
-  i = 2 (00000000 ... 010)        ← inputs the solver chose
-...
+State 1 file getpassword.c line 18 function getPassword thread 0
+  buf = { 0, 0, 0, 0 }              ← the state so far
+State 2 file ...library/io.c line 91 function gets thread 0
 Violated property:
   dereference failure: array bounds violated   ← what broke
-  CWE: CWE-121, CWE-125, ...                    ← the vuln class
+  CWE: CWE-121, CWE-125, CWE-129, ...           ← the vuln class
+VERIFICATION FAILED
 ```
 
 Read **bottom-up**: what was violated, then scroll up for which values
-caused it. Those values are a ready-made failing test case — keep them.
+caused it.
+
+---
+
+# Deep dive: overflow.c — the trace
+
+```
+State 1 ...  a = { 0, -1 }   ← stack garbage in the array
+State 2 ...  i = -1          ← the index the solver chose
+State 3 ...  x = -1          ← the branch the solver chose
+Violated property:
+  file overflow.c line 24 ... assertion main
+  !((_Bool)((signed long int)(!(p[1] == 1))))
+```
+
+- `x = -1` takes the *else* branch; `a[i + 1]` with `i = -1` writes `a[0]`.
+- So `a[1]` keeps its garbage (`-1`) and `assert(*(p + 1) == 1)` dies.
+
+`i = -1, x = -1` is a ready-made failing test case — keep it.
+
+---
+
+# Deep dive: what broke, and its CWE
+
+Two shapes of violated property:
+
+- **an assertion** — names *your* line:
+  `overflow.c line 24 ... assertion main`
+- **a built-in check** — names the bug kind plus its CWE classes:
+  `dereference failure: array bounds violated`
+  `CWE: CWE-121, CWE-125, CWE-129, CWE-131, CWE-193, CWE-787`
+  *(stack overflow · OOB read · bad index · size miscalc · off-by-one · OOB write)*
+
+The path may point inside ESBMC's model of the C library
+(`io.c line 91` = the `gets` model).
+**That names the API you misused — it is not a bug in ESBMC.**
 
 ---
 
@@ -165,7 +257,7 @@ esbmc unwind.c --unwind 60    → ?
 
 ---
 
-# Lab 4 — Team challenge (30 min) 🏆
+# Lab 4 — Team challenge (30 min)
 
 Teams of 3–4. Points on the whiteboard:
 

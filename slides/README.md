@@ -34,10 +34,23 @@ concurrency/floating-point intuitions (Lab 4).
 
 ## Session 2 run order
 
-Session 2 is hands-on; slides only frame the labs.
-`session2/01-session2-hands-on.pptx`, shown as each lab starts. Companion background decks (extracted from COMP63342 lectures,
-optional): `02-memory-model.pptx` for Lab 2, `03-k-induction.pptx` for
-the Lab 3 stretch question.
+Session 2 is hands-on; slides only frame the labs. The main deck is
+`session2/01-session2-hands-on.pptx` (20 slides), shown as each lab
+starts. Solutions are revealed from the instructor-only deck after each
+lab closes.
+
+| When (plan block) | Deck | Slides |
+|---|---|---|
+| 18:00 welcome, recap quiz, schedule, the one trick | `01-session2-hands-on` | 1–4 |
+| 18:15 Lab 1 intro + Z3 API walkthrough | `01-session2-hands-on` | 5–8 |
+| 18:50 checkpoint, Lab 2 intro, counterexample deep dive | `01-session2-hands-on` | 9–13 |
+| Lab 2 background, on demand | `02-memory-model` (slides 5–9 are the authored appendix) | 1–9 |
+| after each lab block: solution reveal | `../instructor/session2-solutions.pptx` (instructor only) | 1–12 |
+| 19:30 break | `01-session2-hands-on` | 14 |
+| 19:40 Lab 3 intro, spec toolkit, bounds discussion | `01-session2-hands-on` | 15–17 |
+| Lab 3 stretch background | `03-k-induction` (slides 6–10 are the authored appendix) — slides 7 and 10 answer the Part 2 questions; show only **after** the whole-room discussion | 1–10 |
+| 20:15 Lab 4 intro + Track A rationale | `01-session2-hands-on` | 18–19 |
+| 20:45 debrief | `01-session2-hands-on` | 20 |
 
 ## Files
 
@@ -45,21 +58,30 @@ the Lab 3 stretch question.
   (built by `build_session1.py`; Markdown twin alongside).
 - `session2/01-session2-hands-on.pptx` — the Session 2 deck
   (built by `build_session2.py`; Markdown twin alongside).
-- `session2/02-memory-model.pptx`, `session2/03-k-induction.pptx` —
-  extracted COMP63342 background decks (converted to 16:9 by
-  `widescreen.py`).
+- `../instructor/session2-solutions.pptx` — instructor-only solution
+  reveals for Session 2 (built by `build_session2_solutions.py`;
+  Markdown twin at `../instructor/session2-solutions.md`). Kept under
+  `instructor/` so zipping `slides/` for students never leaks it.
+- `session2/02-memory-model.pptx` (9 slides),
+  `session2/03-k-induction.pptx` (10 slides) — extracted COMP63342
+  background decks (converted to 16:9 by `widescreen.py`), each with an
+  authored workshop appendix added by `extend_backup_decks.py`.
 - `pptx_helpers.py` — shared slide/table/chart/flow-diagram helpers.
 
 ## Regenerating
 
 ```sh
 python3 -m venv venv && venv/bin/pip install python-pptx
-venv/bin/python build_session1.py   # session1/01-session1-fundamentals.pptx
-venv/bin/python build_session2.py   # session2/01-session2-hands-on.pptx
+venv/bin/python build_session1.py             # session1/01-session1-fundamentals.pptx
+venv/bin/python build_session2.py             # session2/01-session2-hands-on.pptx
+venv/bin/python build_session2_solutions.py   # ../instructor/session2-solutions.pptx
 ```
 
 The extracted background decks came from the original course files
 (animation build-ups collapsed to their final state); to change the
 subset, re-extract from the
 [course page](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html)
-and convert with `widescreen.py`.
+and convert with `widescreen.py`, then run `extend_backup_decks.py`
+**once** to re-apply the authored appendices (it refuses to run on a
+deck that is not at the pristine extracted slide count, so it cannot
+double-append).

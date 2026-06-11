@@ -13,7 +13,7 @@ ESBMC version first.
 | `session1-demos/predict/predict1.c` | `esbmc predict1.c --unwind 6` | FAILED | VLA bounds violated |
 | `session1-demos/predict/predict2.c` | `esbmc predict2.c --unwind 4` | FAILED | NULL-pointer write via global `a` |
 | `session1-demos/predict/predict3.c` | `esbmc predict3.c --unwind 6` | **SUCCESSFUL** | (correct program, by design) |
-| `labs/lab2/overflow.c` | `esbmc overflow.c` | FAILED | array bounds violated (nondet `i`) |
+| `labs/lab2/overflow.c` | `esbmc overflow.c` | FAILED | line-24 `assertion main` — solver picks `i = -1, x = -1`, so the write lands on `a[0]` and `a[1]` keeps its garbage |
 | `labs/lab2/leak.c` | `esbmc leak.c --memory-leak-check` | FAILED | `forgotten memory` — first `malloc` orphaned by `p = q` |
 | `labs/lab2/vla.c` | `esbmc vla.c --unwind 6` | FAILED | VLA bounds violated |
 | `labs/lab2/getpassword.c` | `esbmc getpassword.c --unwind 8` | FAILED | as above |
