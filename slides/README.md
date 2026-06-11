@@ -1,58 +1,65 @@
 # Slides
 
-The presentation material for both sessions: three decks carved out of the
-COMP63342 *Software Security* lectures (animation build-up slides collapsed
-to their final state), plus one authored deck with the workshop-specific
-slides (agenda, exercises, industry landscape, quizzes, lab intros).
+One authored deck per session, built with python-pptx from the scripts in
+this directory, plus two decks extracted from the COMP63342 *Software
+Security* lectures kept as optional background for Session 2's labs.
+
+Each authored deck has a Marp-compatible Markdown twin with the same
+content (`01-session1-fundamentals.md`, `01-session2-hands-on.md`) for
+quick reading and diffing; the build scripts are the canonical source —
+edit the script, regenerate the `.pptx`, and keep the Markdown in sync.
 
 ## Session 1 run order
 
-| When (plan block) | Deck | Slides | Source |
-|---|---|---|---|
-| 18:00 welcome → icebreaker | `workshop-extras.pptx` 1–3 | 3 | authored |
-| 18:10 why software fails | `session1/01-why-software-fails.pptx` | 16 | COMP63342 lecture 1 (short), slides 1, 19–21, 25–27, 29–31, 35, 38–39, 51, 53, 59 |
-| 18:35 Exercise 1 | `workshop-extras.pptx` 4 | 1 | authored |
-| 18:50 testing vs. verification + SAT/SMT (19:25) | `session1/02-testing-vs-verification-sat-smt.pptx` | 19 | COMP63342 lecture 3 (short), slides 1, 9, 18, 21, 30, 32, 34, 36–37, 39, 49, 66, 82–83, 87, 93, 96, 101, 105 |
-| 18:50 sound × complete grid | `workshop-extras.pptx` 5 | 1 | authored |
-| 19:50 BMC internals | `session1/03-bmc-internals.pptx` | 16 | COMP63342 lecture 4 (expanded), slides 1, 10, 14–16, 21, 28–29, 31, 33, 35, 50, 53–54, 61, 77 |
-| 20:15 Exercise 2 | `workshop-extras.pptx` 6 | 1 | authored |
-| 20:30 industry landscape + discussion | `workshop-extras.pptx` 7–10 | 4 | authored |
-| 20:50 quiz + setup homework | `workshop-extras.pptx` 11–12 | 2 | authored |
+A single deck in exact run order — no deck-switching during the evening:
+`session1/01-session1-fundamentals.pptx` (45 slides).
+
+| When (plan block) | Slides | Content |
+|---|---|---|
+| 18:00 welcome → icebreaker | 1–3 | title, agenda, icebreaker poll |
+| 18:10 why software fails | 4–12 | Ariane 5/Therac-25, `getpassword.c` + stack smash, live ESBMC demo, safety vs. security, memory safety, CVE growth and CWE Top 25 charts, industry's conclusion |
+| 18:35 Exercise 1 | 13 | spot the bug |
+| 18:50 testing vs. verification | 14–20 | V&V, why testing can't prove absence, soundness/completeness, sound × complete grid, technique landscape, **the negation trick** |
+| 19:15 break | 21 | — |
+| 19:25 SAT and SMT | 22–28 | SAT, sat/unsat as witness/proof, SMT theories for C, array-bounds worked example, live `z3_demo.py`, wrap-around, SEND+MORE=MONEY |
+| 19:50 bounded model checking | 29–38 | pipeline, loop unwinding, **`--unwind k` verdict table**, SSA, **counterexample anatomy**, live `offbyone.c` demo, nondet/assume/assert preview, concurrency + floating-point hooks for Lab 4 |
+| 20:15 Exercise 2 | 39 | predict the verdict |
+| 20:30 industry landscape + discussion | 40–43 | AWS/SV-COMP, KLEE/SAGE/OSS-Fuzz, Astrée/seL4/CompCert, discussion |
+| 20:50 quiz + setup homework | 44–45 | closing quiz, Session 2 setup |
+
+The deck is designed to pre-teach everything Session 2's labs assume:
+the negation trick (Lab 1), counterexample reading (Lab 2), the
+specification toolkit and unwind-bound semantics (Lab 3), and the
+concurrency/floating-point intuitions (Lab 4).
 
 ## Session 2 run order
 
 Session 2 is hands-on; slides only frame the labs.
-
-| When | Deck | Slides |
-|---|---|---|
-| 18:00 welcome, recap quiz, schedule | `workshop-extras.pptx` 13–15 | 3 |
-| Lab intros 1–4 + bounds discussion (shown as each lab starts) | `workshop-extras.pptx` 16–20 | 5 |
-| 20:45 debrief + where next | `workshop-extras.pptx` 21 | 1 |
+`session2/01-session2-hands-on.pptx`, shown as each lab starts. Companion background decks (extracted from COMP63342 lectures,
+optional): `02-memory-model.pptx` for Lab 2, `03-k-induction.pptx` for
+the Lab 3 stretch question.
 
 ## Files
 
-- `session1/01-why-software-fails.pptx` — motivating `getPassword` example,
-  safety vs. security, CIA, vulnerability classes, CVE growth, "industry
-  needs formal verification", BMC applied to security.
-- `session1/02-testing-vs-verification-sat-smt.pptx` — V&V, soundness and
-  completeness, static analysis vs. testing, BMC vs. symbolic execution,
-  SAT, SMT theories with the array/bit-vector worked example.
-- `session1/03-bmc-internals.pptx` — CBMC/ESBMC/LLBMC architecture, control-flow
-  simplification, loop unwinding, safety conditions as assertions, SSA,
-  guarded assignments, SAT vs. SMT, modelling with nondeterminism
-  (bridges to Lab 3), concurrency teaser (bridges to Lab 4).
-- `workshop-extras.pptx` — the authored workshop slides for both sessions.
-- `workshop-extras.md` — canonical source of the authored deck
-  (Marp-compatible Markdown; edit here first).
-- `build_extras.py` — regenerates `workshop-extras.pptx` from the same
-  content (`python3 -m venv venv && venv/bin/pip install python-pptx &&
-  venv/bin/python build_extras.py`).
+- `session1/01-session1-fundamentals.pptx` — the Session 1 deck
+  (built by `build_session1.py`; Markdown twin alongside).
+- `session2/01-session2-hands-on.pptx` — the Session 2 deck
+  (built by `build_session2.py`; Markdown twin alongside).
+- `session2/02-memory-model.pptx`, `session2/03-k-induction.pptx` —
+  extracted COMP63342 background decks (converted to 16:9 by
+  `widescreen.py`).
+- `pptx_helpers.py` — shared slide/table/chart/flow-diagram helpers.
 
-## Regenerating the extracted decks
+## Regenerating
 
-The three `session1/` decks were extracted from the original course files
-with PowerPoint automation, keeping the slide numbers listed above (build-up
-sequences collapsed to their last, complete slide). To change a subset,
-re-run the extraction against the originals from the
+```sh
+python3 -m venv venv && venv/bin/pip install python-pptx
+venv/bin/python build_session1.py   # session1/01-session1-fundamentals.pptx
+venv/bin/python build_session2.py   # session2/01-session2-hands-on.pptx
+```
+
+The extracted background decks came from the original course files
+(animation build-ups collapsed to their final state); to change the
+subset, re-extract from the
 [course page](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html)
-and update the slide lists in this README.
+and convert with `widescreen.py`.

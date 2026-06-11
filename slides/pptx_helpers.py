@@ -1,15 +1,21 @@
 """Shared helpers for building the authored workshop decks
-(build_extras.py, build_session2.py) with python-pptx, in 16:9."""
+(build_session1.py, build_session2.py) with python-pptx, in 16:9."""
 from pptx import Presentation
+from pptx.chart.data import CategoryChartData
+from pptx.enum.chart import XL_CHART_TYPE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 
 PURPLE = RGBColor(0x5A, 0x0A, 0x7A)
 DARK = RGBColor(0x21, 0x21, 0x21)
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 MONO = "Courier New"
 
 
 def new_presentation():
+    """Create an empty 16:9 (13.333 x 7.5 in) presentation."""
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
@@ -17,6 +23,7 @@ def new_presentation():
 
 
 def add_slide(prs, title, *, title_size=36, lead=False):
+    """Add a blank slide with a purple title (centred-large when lead)."""
     s = prs.slides.add_slide(prs.slide_layouts[6])  # blank
     top = Inches(2.6) if lead else Inches(0.4)
     box = s.shapes.add_textbox(Inches(0.6), top, Inches(12.1), Inches(1.1))
@@ -59,6 +66,7 @@ def add_body(slide, items, *, top=1.6, size=22, left=0.8, width=11.8):
 
 
 def add_table(slide, rows, *, top=1.7, size=18, col_widths=None, left=0.8):
+    """Add a table; the first row is treated as a bold header."""
     n_rows, n_cols = len(rows), len(rows[0])
     total_w = sum(col_widths) if col_widths else 11.7
     shape = slide.shapes.add_table(n_rows, n_cols, Inches(left), Inches(top),
@@ -77,3 +85,55 @@ def add_table(slide, rows, *, top=1.7, size=18, col_widths=None, left=0.8):
                     if i == 0:
                         r.font.bold = True
     return table
+
+
+def add_chart(slide, kind, categories, series_name, values, *,
+              left=1.2, top=1.6, width=10.9, height=5.2, font=12):
+    """Add a native chart. kind: 'line' or 'bar' (horizontal bars;
+    pass categories in bottom-to-top order)."""
+    data = CategoryChartData()
+    data.categories = categories
+    data.add_series(series_name, values)
+    xl_type = (XL_CHART_TYPE.LINE_MARKERS if kind == "line"
+               else XL_CHART_TYPE.BAR_CLUSTERED)
+    frame = slide.shapes.add_chart(xl_type, Inches(left), Inches(top),
+                                   Inches(width), Inches(height), data)
+    chart = frame.chart
+    chart.has_legend = False
+    chart.category_axis.tick_labels.font.size = Pt(font)
+    chart.value_axis.tick_labels.font.size = Pt(font)
+    return chart
+
+
+def add_flow(slide, steps, *, top=2.2, left=0.8, width=11.7,
+             height=1.2, gap=0.55, size=16):
+    """Draw a left-to-right pipeline: rounded purple boxes joined by
+    arrows. steps: list of label strings."""
+    n = len(steps)
+    box_w = (width - gap * (n - 1)) / n
+    for i, label in enumerate(steps):
+        x = left + i * (box_w + gap)
+        box = slide.shapes.add_shape(
+            MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(top),
+            Inches(box_w), Inches(height))
+        box.fill.solid()
+        box.fill.fore_color.rgb = PURPLE
+        box.line.color.rgb = PURPLE
+        tf = box.text_frame
+        tf.word_wrap = True
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
+        r = p.add_run()
+        r.text = label
+        r.font.size = Pt(size)
+        r.font.bold = True
+        r.font.color.rgb = WHITE
+        if i:
+            arrow = slide.shapes.add_shape(
+                MSO_SHAPE.RIGHT_ARROW,
+                Inches(x - gap + 0.08), Inches(top + height / 2 - 0.12),
+                Inches(gap - 0.16), Inches(0.24))
+            arrow.fill.solid()
+            arrow.fill.fore_color.rgb = DARK
+            arrow.line.fill.background()
