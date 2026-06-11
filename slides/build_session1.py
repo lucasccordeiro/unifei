@@ -556,9 +556,11 @@ add_body(s, [
 
 s = add_slide(prs, "Who uses this? — Symbolic execution & fuzzing")
 add_body(s, [
-    "KLEE found 56 bugs in GNU coreutils — code tested for 15 years",
+    "KLEE found 56 serious bugs in coreutils, busybox and Minix — "
+    "including three in coreutils that had survived 15 years of testing",
     "Microsoft SAGE fuzzed Windows file parsers with symbolic execution; "
-    "credited with finding 1/3 of all Win7 file-parsing bugs",
+    "it found ~1/3 of all bugs caught by file fuzzing during Windows 7 "
+    "development — running last, after every other tool",
     "AFL / OSS-Fuzz — Google fuzzes ~1,000 open-source projects "
     "continuously; tens of thousands of bugs found",
     "The pragmatic cousin of verification: no proofs, ruthless "
@@ -568,11 +570,13 @@ add_body(s, [
 s = add_slide(prs, "Who uses this? — Proofs all the way up")
 add_body(s, [
     "Astrée (abstract interpretation) proved absence of runtime errors "
-    "in Airbus A380 fly-by-wire control code",
+    "in the Airbus A340 fly-by-wire code — 132,000 lines of C — and was "
+    "then applied to the A380",
     "seL4 — an OS microkernel with a machine-checked proof of functional "
     "correctness",
     "CompCert — a C compiler with a proof that compilation preserves "
-    "semantics; fuzzers find zero wrong-code bugs in it",
+    "semantics; six CPU-years of fuzzing found no wrong-code bugs in "
+    "its verified core, while every other compiler tested failed",
 ])
 
 s = add_slide(prs, "Discussion")
@@ -590,7 +594,7 @@ add_body(s, [
     "2. ESBMC returns UNSAT for C ∧ ¬P at --unwind 10. "
     "What do we know?",
     "3. What's inside a counterexample?",
-    "4. Which technique proved the A380 flight-control code free of "
+    "4. Which technique proved the A340 flight-control code free of "
     "runtime errors?",
     "5. Why can't testing prove the getPassword program safe?",
 ], size=24)

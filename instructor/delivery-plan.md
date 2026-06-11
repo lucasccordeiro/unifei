@@ -108,7 +108,7 @@ tool always complains" take root.
 **20:30 Landscape.** One slide per technique with flagship deployment:
 BMC/model checking (AWS s2n & kernel CI, ESBMC/CBMC, SV-COMP), symbolic
 execution (KLEE/coreutils, Microsoft SAGE), abstract interpretation
-(Astrée/A380), interactive proof (seL4, CompCert), fuzzing (AFL,
+(Astrée/A340), interactive proof (seL4, CompCert), fuzzing (AFL,
 OSS-Fuzz; lecture 5). Discussion: *"why isn't all software verified?"* —
 let the room produce cost/scalability/spec-effort; add legacy and culture.
 

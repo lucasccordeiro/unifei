@@ -56,8 +56,10 @@ catches type errors, not behaviour errors.
 3. *What does a counterexample contain?*
    **Concrete input values and a step-by-step failing execution trace**
    (for concurrent programs: the thread schedule too).
-4. *Which technique proved absence of runtime errors in Airbus A380
-   flight-control code?* **Abstract interpretation (Astrée).**
+4. *Which technique proved absence of runtime errors in Airbus A340
+   flight-control code?* **Abstract interpretation (Astrée)** —
+   132,000 lines of C in 2003; the analysis was then applied to the
+   A380.
 5. *Why can't testing prove the `getPassword` program safe?*
    **The input space is unbounded/astronomical; testing samples it,
    verification covers it exhaustively (up to a bound).**
