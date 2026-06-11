@@ -2,7 +2,10 @@
 
 **Audience:** Mixed undergraduate/graduate, limited prior exposure to formal methods
 **Format:** Two 3-hour evening sessions (18:00–21:00)
-**Slides:** extract from the COMP63342 lectures on the
+**Slides:** ready to present in [`../slides/`](../slides/) — three subsets
+extracted from the COMP63342 lectures plus the authored workshop deck;
+per-block run order in [`../slides/README.md`](../slides/README.md).
+Originals on the
 [course page](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html)
 **Code:** everything referenced below lives in this repository, and every
 command has been executed and recorded in
@@ -33,7 +36,9 @@ real deployments of formal verification; (5) read a counterexample trace.
 
 ## Preparation
 
-- **Instructor:** ~40-slide subset (map above); ESBMC + Z3 working on the
+- **Instructor:** slides ready in `../slides/` (the ~40-slide subset of the
+  map above, already extracted — see the run order in `../slides/README.md`);
+  ESBMC + Z3 working on the
   presentation machine — dry-run `session1-demos/README.md` top to bottom;
   live-poll quiz loaded from [`quizzes.md`](quizzes.md); print
   [`../handouts/spot-the-bug.md`](../handouts/spot-the-bug.md) and

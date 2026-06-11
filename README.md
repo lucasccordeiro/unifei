@@ -22,6 +22,7 @@ Manchester): <https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-s
 | `handouts/setup.md` | students | Tool installation (send out after Session 1) |
 | `handouts/glossary.md` | students | One-page glossary handout |
 | `handouts/spot-the-bug.md` | students | Session 1, Exercise 1 |
+| `slides/` | instructor | Presentation decks for both sessions (course-slide subsets + authored workshop slides), with run order |
 | `session1-demos/` | instructor | Live-demo programs for Session 1, with exact commands |
 | `labs/` | students | Session 2 starter pack (labs 1–4 + cheatsheet) |
 
@@ -41,7 +42,9 @@ Every demo and lab command in this repository has been executed against
 
 ## Slides
 
-The lecture slides referenced in the delivery plan are available on the
-[course page](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html)
-(lectures 1–5). The plan tells you which slide ranges to extract for the
-~40-slide Session 1 subset.
+The ready-to-present decks live in [`slides/`](slides/) — three subsets
+extracted from the COMP63342 lectures plus an authored deck with the
+workshop-specific slides, with a per-block run order in
+[`slides/README.md`](slides/README.md). The full original lectures (1–5)
+remain available on the
+[course page](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html).
