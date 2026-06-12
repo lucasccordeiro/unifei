@@ -20,7 +20,12 @@ Talking points per demo:
 - **getpassword:** before running, ask the room for the bug. After
   running, point at the CWE numbers — this maps to the vulnerability
   classes from the security lectures. Then: "everything tonight and next
-  week explains how this command works."
+  week explains how this command works." Note what ESBMC does here: it
+  finds the **overflow** (CWE-787), not a magic password. The `strcmp`
+  check is sound — only `"SMT"` passes (provable); the only non-`"SMT"`
+  way in is to smash the stack, which ESBMC reports as a bug rather than
+  synthesising the exploit. For a non-password input that *logically*
+  gets in, that's the `strncmp-bypass` demo.
 - **ctest-gen:** the sequel to getpassword — ask the tool the *opposite*
   question ("can anyone get in?") and it emits the password as a runnable
   CTest. The assertion abort under `ctest` is the violation reproducing,

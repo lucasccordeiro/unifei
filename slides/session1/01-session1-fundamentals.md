@@ -103,6 +103,9 @@ three characters?
   of your program**.
 - Could a test suite find this? Only if someone thinks to type the right
   garbage.
+- ESBMC finds the **overflow itself** (CWE-787) — the door. The check is
+  otherwise sound: no input but `"SMT"` passes it (provable). A
+  *non-password* input that still gets in is the `strncmp` logic-flaw demo.
 
 ---
 
