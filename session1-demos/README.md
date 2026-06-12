@@ -8,6 +8,7 @@ machine before 18:00. Expected outputs: see
 |---|---|---|---|
 | 18:10 block (end) | `getpassword.c` | `esbmc getpassword.c --unwind 8` | `dereference failure: array bounds violated` *inside gets* + CWE-787 tag — the tool just found the password bypass on its own |
 | 18:10 block (slide "runnable test") | `ctest-gen/getpassword.c` | `esbmc getpassword.c --unwind 8 --generate-ctest-testcase`, then `cmake`-build | generates `test_case.c` replaying `"SMT"`; the built binary prints `Access Granted` — the bypass as a runnable test (see `ctest-gen/README.md`) |
+| 18:10 block (bonus: logic flaw) | `strncmp-bypass/getpassword.c` | `esbmc getpassword.c --unwind 8 --generate-ctest-testcase`, then `cmake`-build | `strncmp(buf,"SMT",strlen(buf))` accepts any prefix; ESBMC finds `buf=""` (empty string) — a *non-password* bypass. Built binary prints `Bypass! … input ""` (see `strncmp-bypass/README.md`) |
 | 19:25 block | `z3_demo.py` | `python3 z3_demo.py` | Query 1: a model in milliseconds. Query 2: `unsat` — a proof, not an opinion |
 | 19:50 block (end) | `offbyone.c` | `esbmc offbyone.c --unwind 7` | Counterexample trace shows `i = 5` at the failing write — walk it line by line |
 | 20:15 exercise | `predict/predict1.c` | `esbmc predict1.c --unwind 6` | FAILED — VLA overflow (two causes: `size+1` bound and the `n=0` first call) |
@@ -24,6 +25,10 @@ Talking points per demo:
   question ("can anyone get in?") and it emits the password as a runnable
   CTest. The assertion abort under `ctest` is the violation reproducing,
   not a tooling error.
+- **strncmp-bypass:** the punchline — here the *check itself* is wrong
+  (`strncmp(buf,"SMT",strlen(buf))` accepts any prefix). ESBMC finds the
+  empty string: access granted to someone who typed nothing. No overflow,
+  no guessed secret — just a one-character bug, found in milliseconds.
 - **z3_demo:** frame as *search engine for maths*. Query 2 is a proof of
   impossibility — no test suite can ever give you that.
 - **offbyone:** this is the BMC pipeline made visible: the `--unwind 7`
