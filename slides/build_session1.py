@@ -381,6 +381,25 @@ add_table(s, [
 add_body(s, ["Tonight: bounded model checking. At 20:30 we tour who uses "
              "the rest."], top=5.4, size=20)
 
+# ---------------------------------------------- LLMs as bug-finders + synergy
+s = add_slide(prs, "LLMs find bugs too — but who checks the LLM?")
+add_body(s, [
+    "LLMs (Copilot, Claude, Cursor) read code and flag bugs — fast, broad, "
+    "cheap. They even find real zero-days: Google's Big Sleep found an "
+    "exploitable buffer underflow in SQLite (2024).",
+    "But an LLM is unsound and incomplete: it misses real bugs and "
+    "hallucinates ones that aren't there — no guarantees. Same corner of "
+    "the grid as code review.",
+    "The win is pairing them — the LLM proposes, a sound checker disposes:",
+    ("the LLM suggests bugs, fixes, specs, or inductive invariants;", 1),
+    ("the verifier returns a concrete counterexample or a proof — and "
+     "catches the hallucinations.", 1),
+    "ESBMC-AI does exactly this: ESBMC verifies → counterexample + code → "
+    "LLM proposes a fix → re-verify, loop until proven.",
+], top=1.6, size=20)
+add_body(s, ["Sources: Google Big Sleep (Project Zero × DeepMind, 2024) · "
+             "ESBMC-AI — esbmc.github.io/esbmc-ai"], top=7.0, size=14)
+
 s = add_slide(prs, "The one trick to remember")
 add_body(s, [
     "To prove a property P, ask whether ¬P is satisfiable.",

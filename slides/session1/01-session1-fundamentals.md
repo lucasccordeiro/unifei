@@ -378,6 +378,26 @@ Tonight: bounded model checking. At 20:30 we tour who uses the rest.
 
 ---
 
+# LLMs find bugs too — but who checks the LLM?
+
+- LLMs (Copilot, Claude, Cursor) read code and flag bugs — fast, broad,
+  cheap. They even find real zero-days: Google's **Big Sleep** found an
+  exploitable buffer underflow in **SQLite** (2024).
+- But an LLM is **unsound *and* incomplete**: it misses real bugs and
+  hallucinates ones that aren't there — no guarantees. Same corner of the
+  grid as code review.
+- The win is pairing them — **the LLM proposes, a sound checker disposes:**
+  - the LLM suggests bugs, fixes, specs, or inductive invariants;
+  - the verifier returns a concrete **counterexample** or a **proof** — and
+    catches the hallucinations.
+- **ESBMC-AI** does exactly this: ESBMC verifies → counterexample + code →
+  LLM proposes a fix → re-verify, loop until proven.
+
+*Sources: Google Big Sleep (Project Zero × DeepMind, 2024) · ESBMC-AI —
+esbmc.github.io/esbmc-ai*
+
+---
+
 # The one trick to remember
 
 To prove a property **P**, ask whether **¬P** is satisfiable.
