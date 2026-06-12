@@ -355,12 +355,15 @@ s = add_slide(prs, "Where does your technique sit?")
 add_table(s, [
     ["", "Complete (no false alarms)", "Incomplete"],
     ["Sound (no missed bugs)", "the dream", "abstract interpretation"],
-    ["Unsound", "bounded model checking*", "testing, code review"],
+    ["Unsound", "bounded model checking*, testing", "code review"],
 ], top=1.7, size=20, col_widths=[3.4, 4.4, 3.9])
-add_body(s, ["* sound up to its bound — tonight's central fine print",
+add_body(s, ["* sound only up to its bound. k-induction removes it: prove "
+             "the inductive step — not just unwind to depth k — and BMC "
+             "climbs into the Sound row (an unbounded proof when the "
+             "induction converges; Session 2).",
              "Think–pair–share (5 min): place testing, code review, compiler "
              "warnings, and “prove it with maths” on this grid. "
-             "Defend your placement."], top=4.1, size=22)
+             "Defend your placement."], top=4.1, size=20)
 
 s = add_slide(prs, "The technique landscape")
 add_table(s, [
