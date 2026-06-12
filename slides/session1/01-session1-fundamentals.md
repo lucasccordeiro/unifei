@@ -327,8 +327,8 @@ Testing is complete but not sound (every failure is real; absence proves
 nothing).
 Sound static analysers — e.g. abstract interpretation — are sound but not
 complete by design (no missed bugs, but false alarms). Most everyday
-bug-finders, by contrast, are unsound: they miss bugs to keep false alarms
-low.
+bug-finders, by contrast, are unsound: they accept missed bugs to scale to
+real code and keep false alarms manageable.
 
 ---
 

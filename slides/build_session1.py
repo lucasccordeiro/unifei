@@ -325,8 +325,8 @@ add_body(s, [
     "proves nothing).",
     "Sound static analysers — e.g. abstract interpretation — are sound "
     "but not complete by design (no missed bugs, but false alarms).",
-    "Most everyday bug-finders, by contrast, are unsound: they miss bugs "
-    "to keep false alarms low.",
+    "Most everyday bug-finders, by contrast, are unsound: they accept "
+    "missed bugs to scale to real code and keep false alarms manageable.",
 ], top=1.8, size=24)
 
 s = add_slide(prs, "Where does your technique sit?")
