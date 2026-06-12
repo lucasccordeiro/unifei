@@ -152,6 +152,29 @@ add_body(s, ["Docs: esbmc.github.io/docs/c-cpp/ctest-gen"],
          top=7.0, size=14).text_frame.paragraphs[0].runs[0] \
     .hyperlink.address = CTESTGEN_URL
 
+# ------------------------------------------------ when the check itself is wrong
+s = add_slide(prs, "When the check itself is wrong")
+add_body(s, [
+    "No overflow, no guessed secret — this time the access check has a "
+    "one-character bug, and ESBMC walks straight through it.",
+    ("  int access_granted(const char *buf) {", 0, True),
+    ("    return strncmp(buf, \"SMT\", strlen(buf)) == 0;", 0, True),
+    ("  }   /* compares only strlen(buf) chars → any prefix passes */",
+     0, True),
+    ("", 0, True),
+    ("  if (access_granted(buf) && strcmp(buf, \"SMT\") != 0)", 0, True),
+    ("    assert(0);     /* got in WITHOUT the password */", 0, True),
+    ("", 0, True),
+    ("$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase", 0, True),
+    ("  buf = { 0, 0, 0 }            → the empty string \"\"", 0, True),
+    ("VERIFICATION FAILED", 0, True),
+    "",
+    "ESBMC grants itself access by typing nothing: \"\" is a prefix of "
+    "\"SMT\", so strncmp compares zero characters and returns 0. The fix is "
+    "strcmp — compare the whole password.",
+], size=20)
+add_body(s, ["session1-demos/strncmp-bypass/"], top=7.0, size=14)
+
 s = add_slide(prs, "Safety and security: two sides of one coin")
 add_body(s, [
     "Safety — the system must not harm the world "

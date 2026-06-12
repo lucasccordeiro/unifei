@@ -157,6 +157,34 @@ Docs: [esbmc.github.io/docs/c-cpp/ctest-gen](https://esbmc.github.io/docs/c-cpp/
 
 ---
 
+# When the check itself is wrong
+
+No overflow, no guessed secret — this time the access check has a
+one-character bug, and ESBMC walks straight through it.
+
+```c
+int access_granted(const char *buf) {
+  return strncmp(buf, "SMT", strlen(buf)) == 0;
+}   /* compares only strlen(buf) chars → any prefix passes */
+
+if (access_granted(buf) && strcmp(buf, "SMT") != 0)
+  assert(0);     /* got in WITHOUT the password */
+```
+
+```
+$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase
+  buf = { 0, 0, 0 }            → the empty string ""
+VERIFICATION FAILED
+```
+
+ESBMC grants itself access by typing nothing: `""` is a prefix of `"SMT"`,
+so `strncmp` compares zero characters and returns 0. The fix is `strcmp` —
+compare the whole password.
+
+`session1-demos/strncmp-bypass/`
+
+---
+
 # Safety and security: two sides of one coin
 
 - **Safety** — the system must not harm the world (Therac-25, Ariane 5).
