@@ -120,6 +120,36 @@ add_body(s, [
     "overflow is reachable — and printed the input that triggers it.",
 ], size=22)
 
+# ------------------------------------------------ from proof to runnable test
+CTESTGEN_URL = "https://esbmc.github.io/docs/c-cpp/ctest-gen/"
+
+s = add_slide(prs, "From counterexample to a runnable test")
+add_body(s, [
+    "Ask the same tool the opposite question — \"can anyone ever be let "
+    "in?\" — and it hands back the exact password, as a test you can run.",
+    ("  char buf[4];", 0, True),
+    ("  for (int i = 0; i < 4; i++) buf[i] = nondet_char();", 0, True),
+    ("  assert(strcmp(buf, \"SMT\") != 0);  /* claim: never granted */",
+     0, True),
+    ("", 0, True),
+    ("$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase",
+     0, True),
+    ("  → Generated CTest test case: test_case.c", 0, True),
+    ("", 0, True),
+    ("char nondet_char(void) {            /* test_case.c */", 0, True),
+    ("  static const char v[] = { 83, 77, 84, 0 };  /* \"SMT\" */",
+     0, True),
+    ("  static int i = 0; return v[i++];", 0, True),
+    ("}", 0, True),
+    "",
+    "ESBMC derived the password from the program's own logic. The test "
+    "compiles, runs, and prints \"Access Granted\" — no one had to guess "
+    "the right input.",
+], size=20)
+add_body(s, ["Docs: esbmc.github.io/docs/c-cpp/ctest-gen"],
+         top=7.0, size=14).text_frame.paragraphs[0].runs[0] \
+    .hyperlink.address = CTESTGEN_URL
+
 s = add_slide(prs, "Safety and security: two sides of one coin")
 add_body(s, [
     "Safety — the system must not harm the world "

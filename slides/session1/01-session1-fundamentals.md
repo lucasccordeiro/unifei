@@ -125,6 +125,36 @@ overflow is reachable — and printed the input that triggers it.
 
 ---
 
+# From counterexample to a runnable test
+
+Ask the same tool the *opposite* question — "can anyone ever be let in?" —
+and it hands back the exact password, as a test you can run.
+
+```c
+char buf[4];
+for (int i = 0; i < 4; i++) buf[i] = nondet_char();
+assert(strcmp(buf, "SMT") != 0);   /* claim: never granted */
+```
+
+```
+$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase
+  → Generated CTest test case: test_case.c
+```
+
+```c
+char nondet_char(void) {            /* test_case.c */
+  static const char v[] = { 83, 77, 84, 0 };   /* "SMT" */
+  static int i = 0; return v[i++];
+}
+```
+
+ESBMC derived the password from the program's own logic. The test compiles,
+runs, and prints **"Access Granted"** — no one had to guess the right input.
+
+Docs: [esbmc.github.io/docs/c-cpp/ctest-gen](https://esbmc.github.io/docs/c-cpp/ctest-gen/)
+
+---
+
 # Safety and security: two sides of one coin
 
 - **Safety** — the system must not harm the world (Therac-25, Ariane 5).
