@@ -16,11 +16,15 @@ from pptx_helpers import (new_presentation, add_slide, add_body, add_table,
 prs = new_presentation()
 
 # ---------------------------------------------------------------- welcome
+COMP63342_URL = ("https://ssvlab.github.io/lucasccordeiro/courses/2022/01/"
+                 "software-security/index.html")
+
 s = add_slide(prs, "Formal Verification Workshop", lead=True)
-add_body(s, ["Session 1 — Fundamentals and Real-World Applications",
-             "18:00 – 21:00",
-             "Built on the COMP63342 Software Security course "
-             "(University of Manchester)"], top=3.9, size=26)
+box = add_body(s, ["Session 1 — Fundamentals and Real-World Applications",
+                   "18:00 – 21:00",
+                   "Built on the COMP63342 Software Security course "
+                   "(University of Manchester)"], top=3.9, size=26)
+box.text_frame.paragraphs[2].runs[0].hyperlink.address = COMP63342_URL
 
 s = add_slide(prs, "Tonight")
 add_table(s, [

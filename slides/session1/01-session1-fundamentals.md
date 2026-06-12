@@ -17,7 +17,7 @@ style: |
 
 18:00 – 21:00
 
-*Built on the COMP63342 Software Security course (University of Manchester)*
+*Built on the [COMP63342 Software Security course](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html) (University of Manchester)*
 
 ---
 
