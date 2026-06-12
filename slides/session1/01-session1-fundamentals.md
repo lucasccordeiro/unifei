@@ -332,6 +332,22 @@ real code and keep false alarms manageable.
 
 ---
 
+# The techniques as real tools
+
+| Technique | In one line | Example tools |
+|---|---|---|
+| Testing & fuzzing | run the code on many inputs | AFL++, libFuzzer, OSS-Fuzz |
+| Symbolic execution | explore paths with a solver; each bug comes with an input | KLEE, SAGE, angr |
+| Bug-finding static analysis | scan for suspicious patterns (unsound — misses bugs) | Coverity, Clang Static Analyzer, CodeQL, Cppcheck |
+| Abstract interpretation | over-approximate every run (sound — but false alarms) | Astrée, Polyspace, Frama-C (Eva) |
+| Bounded model checking | prove properties up to a depth bound | CBMC, ESBMC |
+| Deductive verification | prove code against a spec (needs effort) | Dafny, SPARK (GNATprove), Frama-C (WP) |
+
+Tonight's tool, ESBMC, is bounded model checking — and BMC and deductive
+verifiers both run on the SAT/SMT solvers we meet after the break.
+
+---
+
 # Where does your technique sit?
 
 | | Complete (no false alarms) | Incomplete |
