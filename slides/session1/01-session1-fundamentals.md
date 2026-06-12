@@ -325,8 +325,10 @@ Both answers are useful. The second one is a free bug report.
 
 Testing is complete but not sound (every failure is real; absence proves
 nothing).
-Most static analysers are sound but not complete (no missed bugs, but
-false alarms).
+Sound static analysers — e.g. abstract interpretation — are sound but not
+complete by design (no missed bugs, but false alarms). Most everyday
+bug-finders, by contrast, are unsound: they miss bugs to keep false alarms
+low.
 
 ---
 
