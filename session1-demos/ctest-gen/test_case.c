@@ -7,7 +7,7 @@ void __VERIFIER_assume(int cond) { (void)cond; }
 
 char __VERIFIER_nondet_char(void) {
   static int i = 0;
-  static const char v[] = { 83, 77, 84, 0 };
+  static const char v[] = { 83, 77, 84 };
   return v[i++];
 }
 

@@ -1,8 +1,8 @@
 # Session 1 demo — ESBMC test-case generation
 
 Companion to the slide **"From counterexample to a runnable test."** It shows
-ESBMC deriving the password that grants access and emitting it as a concrete,
-runnable test — no one has to guess the right input.
+ESBMC *finding* an input that bypasses the password check and emitting it as a
+concrete, runnable test — no one has to guess the right input.
 
 Docs: <https://esbmc.github.io/docs/c-cpp/ctest-gen/>
 
@@ -10,25 +10,27 @@ Docs: <https://esbmc.github.io/docs/c-cpp/ctest-gen/>
 
 | File | Origin | Purpose |
 |------|--------|---------|
-| `getpassword.c` | authored | the program under test + the security property |
-| `test_case.c` | generated | concrete `__VERIFIER_nondet_char` returning `"SMT"` |
+| `getpassword.c` | authored | the access check + the "no bypass" claim ESBMC tries to break |
+| `test_case.c` | generated | concrete `__VERIFIER_nondet_char` replaying the bypassing input |
 | `CMakeLists.txt` | generated | links the source with the test case under CTest |
 | `esbmc_verifier.h` | generated | declarations force-included during the native build |
 
 `test_case.c`, `CMakeLists.txt`, and `esbmc_verifier.h` are committed as a
 reference, but they are **regenerated** by step 1 below.
 
-## Step 1 — let ESBMC find the input and write the test
+## Step 1 — let ESBMC find a bypassing input and write the test
 
 ```bash
 esbmc getpassword.c --unwind 8 --generate-ctest-testcase
 ```
 
-ESBMC refutes the property `assert(!granted)`, reports `VERIFICATION FAILED`,
-and writes `test_case.c` whose `__VERIFIER_nondet_char()` replays the witness:
+`getpassword.c` claims the *access-granted* branch is unreachable (`assert(0)`
+inside it). ESBMC disproves that claim, reports `VERIFICATION FAILED`, and
+writes `test_case.c` whose `__VERIFIER_nondet_char()` replays the input that
+gets in:
 
 ```c
-static const char v[] = { 83, 77, 84, 0 };   /* 'S','M','T','\0' */
+static const char v[] = { 83, 77, 84 };   /* 'S','M','T' → "SMT" */
 ```
 
 ## Step 2 — build and run the generated test (no ESBMC needed)
@@ -42,18 +44,18 @@ cmake .. && cmake --build .
 Expected output:
 
 ```
-Access Granted
-Assertion failed: (!granted), function main, file getpassword.c, line 40.
+Access Granted with input "SMT"
+Assertion failed: (0), function main, file getpassword.c, line 45.
 ```
 
-The program prints **Access Granted** because ESBMC handed it the exact
-password, then aborts on the assertion. The abort is the point: the witness
-*reproduces* the security-property violation. Running it under CTest
+The program reaches the protected branch — it prints the bypassing input ESBMC
+found, then aborts on `assert(0)`. The abort is the point: the witness
+*reproduces* the access-control bypass. Running it under CTest
 
 ```bash
 ctest --output-on-failure
 ```
 
 therefore reports the test as **failed (subprocess aborted)** — the expected,
-correct signal that the "never granted" property is reachable. A green run
-would mean the bypass could not be reproduced.
+correct signal that the bypass is reachable. A green run would mean no input
+could get past the check.
