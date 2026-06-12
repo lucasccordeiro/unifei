@@ -532,14 +532,13 @@ add_body(s, [
     "each column's carry, backtracking when a choice clashes — the way you "
     "solve Sudoku.",
     "Z3 returns the unique solution in well under a second:",
+    ("$ python3 send_more_money.py        # in session1-demos/", 1, True),
     ("9567 + 1085 = 10652   (S=9 E=5 N=6 D=7 M=1 O=0 R=8 Y=2)", 1, True),
     "",
     "The same engine that solves this finds your bugs: a counterexample is "
     "just a satisfying assignment to “break my program”.",
     "Lab 1, Stage 2: you run this yourself.",
 ], size=22)
-add_body(s, ["Run it live: session1-demos/send_more_money.py"],
-         top=7.0, size=14)
 
 # --------------------------------------------- bounded model checking 19:50
 s = add_slide(prs, "Bounded model checking: the pipeline")
