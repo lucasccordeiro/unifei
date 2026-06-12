@@ -523,9 +523,10 @@ will encode these three lines yourself and watch it happen.
 M O N E Y
 ```
 
-- Eight letters, all different digits, S ≠ 0, M ≠ 0 — about 10⁸
-  candidate assignments.
-- Z3 finds the unique solution in well under a second.
+- Eight letters, ten digits — naïvely 10⁸ ways to fill them in.
+  *"All different, S ≠ 0, M ≠ 0"* cuts that to about 1.5 million — still
+  far too many to eyeball.
+- Z3 finds the unique solution (9567 + 1085 = 10652) in well under a second.
 - The same engine that solves puzzles finds your bugs: a counterexample
   is just a solution to *"break my program"*.
 - **Lab 1, Stage 2: you run this yourself.**
