@@ -562,6 +562,8 @@ MONEY = 10000·M + 1000·O + 100·N + 10·E + Y
   just a satisfying assignment to *"break my program"*.
 - **Lab 1, Stage 2: you run this yourself.**
 
+Run it live: `session1-demos/send_more_money.py`
+
 ---
 
 # Bounded model checking: the pipeline

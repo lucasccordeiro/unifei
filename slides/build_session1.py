@@ -538,6 +538,8 @@ add_body(s, [
     "just a satisfying assignment to “break my program”.",
     "Lab 1, Stage 2: you run this yourself.",
 ], size=22)
+add_body(s, ["Run it live: session1-demos/send_more_money.py"],
+         top=7.0, size=14)
 
 # --------------------------------------------- bounded model checking 19:50
 s = add_slide(prs, "Bounded model checking: the pipeline")

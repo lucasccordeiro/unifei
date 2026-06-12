@@ -10,6 +10,7 @@ machine before 18:00. Expected outputs: see
 | 18:10 block (slide "runnable test") | `ctest-gen/getpassword.c` | `esbmc getpassword.c --unwind 8 --generate-ctest-testcase`, then `cmake`-build | generates `test_case.c` replaying `"SMT"`; the built binary prints `Access Granted` — the bypass as a runnable test (see `ctest-gen/README.md`) |
 | 18:10 block (bonus: logic flaw) | `strncmp-bypass/getpassword.c` | `esbmc getpassword.c --unwind 8 --generate-ctest-testcase`, then `cmake`-build | `strncmp(buf,"SMT",strlen(buf))` accepts any prefix; ESBMC finds `buf=""` (empty string) — a *non-password* bypass. Built binary prints `Bypass! … input ""` (see `strncmp-bypass/README.md`) |
 | 19:25 block | `z3_demo.py` | `python3 z3_demo.py` | Query 1: a model in milliseconds. Query 2: `unsat` — a proof, not an opinion |
+| 19:25 block (slide "let the solver search") | `send_more_money.py` | `python3 send_more_money.py` | Z3 returns `9567 + 1085 = 10652`; the negation-trick re-check is `unsat` — the answer is unique. The same engine that solves the puzzle finds bugs |
 | 19:50 block (end) | `offbyone.c` | `esbmc offbyone.c --unwind 7` | Counterexample trace shows `i = 5` at the failing write — walk it line by line |
 | 20:15 exercise | `predict/predict1.c` | `esbmc predict1.c --unwind 6` | FAILED — VLA overflow (two causes: `size+1` bound and the `n=0` first call) |
 | 20:15 exercise | `predict/predict2.c` | `esbmc predict2.c --unwind 4` | FAILED — write through the NULL global pointer `a` |
