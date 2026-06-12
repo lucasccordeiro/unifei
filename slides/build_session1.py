@@ -732,6 +732,25 @@ add_body(s, [
     "actually cites.)",
 ], top=2.4, size=28)
 
+# ------------------------------------------------- under the hood (for the curious)
+IREP2_URL = "https://github.com/esbmc/esbmc/blob/master/src/irep2/README.md"
+
+s = add_slide(prs, "Under the hood — and how to hack on it")
+add_body(s, [
+    "Tonight's pipeline was the conceptual one. ESBMC's real pipeline:",
+    ("Clang frontend → irep2 (typed IR) → GOTO program → symbolic "
+     "execution (unwind, SSA) → SMT backends (Z3, Bitwuzla, cvc5)", 1),
+    "",
+    "irep2 is the typed, reference-counted representation everything "
+    "lowers to and every backend consumes.",
+    "Want to add a check, a frontend, or a new node type? Start here:",
+    ("github.com/esbmc/esbmc  →  src/irep2/README.md", 1, True),
+    "",
+    "For the curious — and anyone who wants to contribute.",
+], top=1.6, size=22)
+add_body(s, ["src/irep2/README.md"], top=7.0, size=14) \
+    .text_frame.paragraphs[0].runs[0].hyperlink.address = IREP2_URL
+
 # ------------------------------------------------------------ close 20:50
 s = add_slide(prs, "Closing quiz")
 add_body(s, [

@@ -12,7 +12,7 @@ edit the script, regenerate the `.pptx`, and keep the Markdown in sync.
 ## Session 1 run order
 
 A single deck in exact run order — no deck-switching during the evening:
-`session1/01-session1-fundamentals.pptx` (51 slides).
+`session1/01-session1-fundamentals.pptx` (52 slides).
 
 | When (plan block) | Slides | Content |
 |---|---|---|
@@ -24,8 +24,8 @@ A single deck in exact run order — no deck-switching during the evening:
 | 19:25 SAT and SMT | 26–34 | SAT, sat/unsat as witness/proof, SMT theories for C, array-bounds worked example, live `z3_demo.py`, wrap-around, **SEND+MORE=MONEY worked step by step** (puzzle → arithmetic encoding → solver search) |
 | 19:50 bounded model checking | 35–44 | pipeline, loop unwinding, **`--unwind k` verdict table**, SSA, **counterexample anatomy**, live `offbyone.c` demo, nondet/assume/assert preview, concurrency + floating-point hooks for Lab 4 |
 | 20:15 Exercise 2 | 45 | predict the verdict |
-| 20:30 industry landscape + discussion | 46–49 | AWS/SV-COMP, KLEE/SAGE/OSS-Fuzz, Astrée/seL4/CompCert, discussion |
-| 20:50 quiz + setup homework | 50–51 | closing quiz, Session 2 setup |
+| 20:30 industry landscape + discussion | 46–50 | AWS/SV-COMP, KLEE/SAGE/OSS-Fuzz, Astrée/seL4/CompCert, discussion, **under the hood** (ESBMC's real pipeline + irep2 IR, contributor pointer) |
+| 20:50 quiz + setup homework | 51–52 | closing quiz, Session 2 setup |
 
 The deck is designed to pre-teach everything Session 2's labs assume:
 the negation trick (Lab 1), counterexample reading (Lab 2), the

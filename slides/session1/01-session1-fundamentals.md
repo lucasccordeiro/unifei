@@ -787,6 +787,27 @@ actually cites.)*
 
 ---
 
+# Under the hood — and how to hack on it
+
+Tonight's pipeline was the conceptual one. ESBMC's **real** pipeline:
+
+- Clang frontend → **irep2** (typed IR) → GOTO program → symbolic
+  execution (unwind, SSA) → SMT backends (Z3, Bitwuzla, cvc5)
+
+**irep2** is the typed, reference-counted representation everything lowers
+to and every backend consumes.
+
+Want to add a check, a frontend, or a new node type? Start here:
+
+```
+github.com/esbmc/esbmc  →  src/irep2/README.md
+```
+
+*For the curious — and anyone who wants to contribute:*
+[src/irep2/README.md](https://github.com/esbmc/esbmc/blob/master/src/irep2/README.md)
+
+---
+
 # Closing quiz
 
 1. A tool that never raises a false alarm is called …?
