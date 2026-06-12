@@ -523,12 +523,43 @@ will encode these three lines yourself and watch it happen.
 M O N E Y
 ```
 
-- Eight letters, ten digits — naïvely 10⁸ ways to fill them in.
-  *"All different, S ≠ 0, M ≠ 0"* cuts that to about 1.5 million — still
-  far too many to eyeball.
-- Z3 finds the unique solution (9567 + 1085 = 10652) in well under a second.
-- The same engine that solves puzzles finds your bugs: a counterexample
-  is just a solution to *"break my program"*.
+- A **substitution puzzle**: replace each letter with a digit. Same letter
+  → same digit; different letters → different digits.
+- Eight distinct letters — S E N D M O R Y. The words are fixed; what we
+  solve for is **the digit hiding behind each letter**.
+- Goal: find the assignment that makes the addition come out true.
+
+---
+
+# Turn the puzzle into arithmetic
+
+A word is just its digits times their place value:
+
+```
+SEND  = 1000·S + 100·E + 10·N + D
+MORE  = 1000·M + 100·O + 10·R + E
+MONEY = 10000·M + 1000·O + 100·N + 10·E + Y
+```
+
+- So the whole puzzle becomes **one equation**: SEND + MORE = MONEY.
+- Plus the rules: every letter is a digit 0–9; all eight are different;
+  S ≠ 0 and M ≠ 0 (no number starts with 0).
+- Why is MONEY five digits? Two 4-digit numbers can carry into a fifth
+  place — and that carry is at most 1, so **M = 1** before we even start.
+
+---
+
+# Let the solver search
+
+- Naïvely 10⁸ ways to fill in eight letters; *"all different, S ≠ 0,
+  M ≠ 0"* cuts it to about 1.5 million — still far too many to eyeball.
+- The solver doesn't guess blindly: it fixes **M = 1**, then propagates
+  each column's carry, backtracking when a choice clashes — the way you
+  solve Sudoku.
+- Z3 returns the unique solution in well under a second:
+  `9567 + 1085 = 10652` (S=9 E=5 N=6 D=7 M=1 O=0 R=8 Y=2).
+- The same engine that solves this finds your bugs: a counterexample is
+  just a satisfying assignment to *"break my program"*.
 - **Lab 1, Stage 2: you run this yourself.**
 
 ---
