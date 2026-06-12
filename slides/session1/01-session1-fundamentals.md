@@ -17,7 +17,7 @@ style: |
 
 18:00 – 21:00
 
-*Built on the COMP63342 Software Security course (University of Manchester)*
+*Built on the [COMP63342 Software Security course](https://ssvlab.github.io/lucasccordeiro/courses/2022/01/software-security/index.html) (University of Manchester)*
 
 ---
 
@@ -46,20 +46,26 @@ Any failure. Any decade. Shout it out / drop it in the poll.
 
 ---
 
-# When software fails: two classics
+# When software fails: two classics and a fresh one
 
-- **Ariane 5, 1996** — a 64-bit float squeezed into a 16-bit integer.
+- **Ariane 5, 1996**: a 64-bit float squeezed into a 16-bit integer.
   The conversion overflowed; the rocket self-destructed 40 seconds after
   lift-off.
   - The code was reused from Ariane 4, where that value *"could never
     get that large"*.
-- **Therac-25, 1985–87** — a race condition between operator keystrokes
+- **Therac-25, 1985–87**: a race condition between operator keystrokes
   and the radiation beam controller. Six massive overdoses, several fatal.
   - Sequential testing never showed it: the bug needed precise, fast
     operator timing.
+- **CrowdStrike, 2024**: a security update supplied 21 input fields to
+  sensor code expecting 20. The out-of-bounds read blue-screened
+  8.5 million Windows machines; the bad file was live for just 78 minutes.
+  - It passed the release tooling: the content validator itself had a bug,
+    and no test ever read the 21st field.
 
-An **integer overflow** and a **race condition**. Hold that thought —
-you will hunt both bug classes yourself in Session 2.
+An **integer overflow**, a **race condition**, and an **out-of-bounds
+read**. Hold that thought — you will hunt all three bug classes yourself
+in Session 2.
 
 ---
 
@@ -116,6 +122,36 @@ VERIFICATION FAILED
 
 No input was typed. No exploit was written. The tool **proved** the
 overflow is reachable — and printed the input that triggers it.
+
+---
+
+# From counterexample to a runnable test
+
+Ask the same tool the *opposite* question — "can anyone ever be let in?" —
+and it hands back the exact password, as a test you can run.
+
+```c
+char buf[4];
+for (int i = 0; i < 4; i++) buf[i] = nondet_char();
+assert(strcmp(buf, "SMT") != 0);   /* claim: never granted */
+```
+
+```
+$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase
+  → Generated CTest test case: test_case.c
+```
+
+```c
+char nondet_char(void) {            /* test_case.c */
+  static const char v[] = { 83, 77, 84, 0 };   /* "SMT" */
+  static int i = 0; return v[i++];
+}
+```
+
+ESBMC derived the password from the program's own logic. The test compiles,
+runs, and prints **"Access Granted"** — no one had to guess the right input.
+
+Docs: [esbmc.github.io/docs/c-cpp/ctest-gen](https://esbmc.github.io/docs/c-cpp/ctest-gen/)
 
 ---
 

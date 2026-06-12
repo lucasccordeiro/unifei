@@ -12,20 +12,20 @@ edit the script, regenerate the `.pptx`, and keep the Markdown in sync.
 ## Session 1 run order
 
 A single deck in exact run order — no deck-switching during the evening:
-`session1/01-session1-fundamentals.pptx` (45 slides).
+`session1/01-session1-fundamentals.pptx` (46 slides).
 
 | When (plan block) | Slides | Content |
 |---|---|---|
 | 18:00 welcome → icebreaker | 1–3 | title, agenda, icebreaker poll |
-| 18:10 why software fails | 4–12 | Ariane 5/Therac-25, `getpassword.c` + stack smash, live ESBMC demo, safety vs. security, memory safety, CVE growth and CWE Top 25 charts, industry's conclusion |
-| 18:35 Exercise 1 | 13 | spot the bug |
-| 18:50 testing vs. verification | 14–20 | V&V, why testing can't prove absence, soundness/completeness, sound × complete grid, technique landscape, **the negation trick** |
-| 19:15 break | 21 | — |
-| 19:25 SAT and SMT | 22–28 | SAT, sat/unsat as witness/proof, SMT theories for C, array-bounds worked example, live `z3_demo.py`, wrap-around, SEND+MORE=MONEY |
-| 19:50 bounded model checking | 29–38 | pipeline, loop unwinding, **`--unwind k` verdict table**, SSA, **counterexample anatomy**, live `offbyone.c` demo, nondet/assume/assert preview, concurrency + floating-point hooks for Lab 4 |
-| 20:15 Exercise 2 | 39 | predict the verdict |
-| 20:30 industry landscape + discussion | 40–43 | AWS/SV-COMP, KLEE/SAGE/OSS-Fuzz, Astrée/seL4/CompCert, discussion |
-| 20:50 quiz + setup homework | 44–45 | closing quiz, Session 2 setup |
+| 18:10 why software fails | 4–13 | Ariane 5/Therac-25/CrowdStrike, `getpassword.c` + stack smash, live ESBMC demo, **ESBMC test-case generation** (`--generate-ctest-testcase`, `session1-demos/`), safety vs. security, memory safety, CVE growth and CWE Top 25 charts, industry's conclusion |
+| 18:35 Exercise 1 | 14 | spot the bug |
+| 18:50 testing vs. verification | 15–21 | V&V, why testing can't prove absence, soundness/completeness, sound × complete grid, technique landscape, **the negation trick** |
+| 19:15 break | 22 | — |
+| 19:25 SAT and SMT | 23–29 | SAT, sat/unsat as witness/proof, SMT theories for C, array-bounds worked example, live `z3_demo.py`, wrap-around, SEND+MORE=MONEY |
+| 19:50 bounded model checking | 30–39 | pipeline, loop unwinding, **`--unwind k` verdict table**, SSA, **counterexample anatomy**, live `offbyone.c` demo, nondet/assume/assert preview, concurrency + floating-point hooks for Lab 4 |
+| 20:15 Exercise 2 | 40 | predict the verdict |
+| 20:30 industry landscape + discussion | 41–44 | AWS/SV-COMP, KLEE/SAGE/OSS-Fuzz, Astrée/seL4/CompCert, discussion |
+| 20:50 quiz + setup homework | 45–46 | closing quiz, Session 2 setup |
 
 The deck is designed to pre-teach everything Session 2's labs assume:
 the negation trick (Lab 1), counterexample reading (Lab 2), the

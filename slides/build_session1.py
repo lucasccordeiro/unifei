@@ -16,11 +16,15 @@ from pptx_helpers import (new_presentation, add_slide, add_body, add_table,
 prs = new_presentation()
 
 # ---------------------------------------------------------------- welcome
+COMP63342_URL = ("https://ssvlab.github.io/lucasccordeiro/courses/2022/01/"
+                 "software-security/index.html")
+
 s = add_slide(prs, "Formal Verification Workshop", lead=True)
-add_body(s, ["Session 1 — Fundamentals and Real-World Applications",
-             "18:00 – 21:00",
-             "Built on the COMP63342 Software Security course "
-             "(University of Manchester)"], top=3.9, size=26)
+box = add_body(s, ["Session 1 — Fundamentals and Real-World Applications",
+                   "18:00 – 21:00",
+                   "Built on the COMP63342 Software Security course "
+                   "(University of Manchester)"], top=3.9, size=26)
+box.text_frame.paragraphs[2].runs[0].hyperlink.address = COMP63342_URL
 
 s = add_slide(prs, "Tonight")
 add_table(s, [
@@ -42,21 +46,28 @@ add_body(s, ["Name a software failure that made the news.",
          top=2.6, size=30)
 
 # ------------------------------------------------ why software fails 18:10
-s = add_slide(prs, "When software fails: two classics")
+s = add_slide(prs, "When software fails: two classics and a fresh one")
 add_body(s, [
-    "Ariane 5, 1996 — a 64-bit float squeezed into a 16-bit integer. "
+    "Ariane 5, 1996: a 64-bit float squeezed into a 16-bit integer. "
     "The conversion overflowed; the rocket self-destructed 40 seconds "
     "after lift-off.",
     ("The code was reused from Ariane 4, where that value "
      "“could never get that large”.", 1),
-    "Therac-25, 1985–87 — a race condition between operator keystrokes "
+    "Therac-25, 1985–87: a race condition between operator keystrokes "
     "and the radiation beam controller. Six massive overdoses, "
     "several fatal.",
     ("Sequential testing never showed it: the bug needed precise, "
      "fast operator timing.", 1),
+    "CrowdStrike, 2024: a security update supplied 21 input fields to "
+    "sensor code expecting 20. The out-of-bounds read blue-screened "
+    "8.5 million Windows machines; the bad file was live for just "
+    "78 minutes.",
+    ("It passed the release tooling: the content validator itself had "
+     "a bug, and no test ever read the 21st field.", 1),
     "",
-    "An integer overflow and a race condition. Hold that thought — "
-    "you will hunt both bug classes yourself in Session 2.",
+    "An integer overflow, a race condition, and an out-of-bounds read. "
+    "Hold that thought — you will hunt all three bug classes yourself "
+    "in Session 2.",
 ])
 
 s = add_slide(prs, "A password check in 11 lines of C")
@@ -108,6 +119,36 @@ add_body(s, [
     "No input was typed. No exploit was written. The tool proved the "
     "overflow is reachable — and printed the input that triggers it.",
 ], size=22)
+
+# ------------------------------------------------ from proof to runnable test
+CTESTGEN_URL = "https://esbmc.github.io/docs/c-cpp/ctest-gen/"
+
+s = add_slide(prs, "From counterexample to a runnable test")
+add_body(s, [
+    "Ask the same tool the opposite question — \"can anyone ever be let "
+    "in?\" — and it hands back the exact password, as a test you can run.",
+    ("  char buf[4];", 0, True),
+    ("  for (int i = 0; i < 4; i++) buf[i] = nondet_char();", 0, True),
+    ("  assert(strcmp(buf, \"SMT\") != 0);  /* claim: never granted */",
+     0, True),
+    ("", 0, True),
+    ("$ esbmc getpassword.c --unwind 8 --generate-ctest-testcase",
+     0, True),
+    ("  → Generated CTest test case: test_case.c", 0, True),
+    ("", 0, True),
+    ("char nondet_char(void) {            /* test_case.c */", 0, True),
+    ("  static const char v[] = { 83, 77, 84, 0 };  /* \"SMT\" */",
+     0, True),
+    ("  static int i = 0; return v[i++];", 0, True),
+    ("}", 0, True),
+    "",
+    "ESBMC derived the password from the program's own logic. The test "
+    "compiles, runs, and prints \"Access Granted\" — no one had to guess "
+    "the right input.",
+], size=20)
+add_body(s, ["Docs: esbmc.github.io/docs/c-cpp/ctest-gen"],
+         top=7.0, size=14).text_frame.paragraphs[0].runs[0] \
+    .hyperlink.address = CTESTGEN_URL
 
 s = add_slide(prs, "Safety and security: two sides of one coin")
 add_body(s, [
