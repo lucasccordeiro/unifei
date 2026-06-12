@@ -46,20 +46,26 @@ Any failure. Any decade. Shout it out / drop it in the poll.
 
 ---
 
-# When software fails: two classics
+# When software fails: two classics and a fresh one
 
-- **Ariane 5, 1996** — a 64-bit float squeezed into a 16-bit integer.
+- **Ariane 5, 1996**: a 64-bit float squeezed into a 16-bit integer.
   The conversion overflowed; the rocket self-destructed 40 seconds after
   lift-off.
   - The code was reused from Ariane 4, where that value *"could never
     get that large"*.
-- **Therac-25, 1985–87** — a race condition between operator keystrokes
+- **Therac-25, 1985–87**: a race condition between operator keystrokes
   and the radiation beam controller. Six massive overdoses, several fatal.
   - Sequential testing never showed it: the bug needed precise, fast
     operator timing.
+- **CrowdStrike, 2024**: a security update supplied 21 input fields to
+  sensor code expecting 20. The out-of-bounds read blue-screened
+  8.5 million Windows machines; the bad file was live for just 78 minutes.
+  - It passed the release tooling: the content validator itself had a bug,
+    and no test ever read the 21st field.
 
-An **integer overflow** and a **race condition**. Hold that thought —
-you will hunt both bug classes yourself in Session 2.
+An **integer overflow**, a **race condition**, and an **out-of-bounds
+read**. Hold that thought — you will hunt all three bug classes yourself
+in Session 2.
 
 ---
 
