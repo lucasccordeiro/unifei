@@ -32,9 +32,16 @@ esbmc stage3_esbmc.py        # -> VERIFICATION FAILED
 
 - Run it under **`esbmc`**, not `python3` — `nondet_int()` is an ESBMC
   intrinsic, not a CPython function.
-- Same bug, **different number**: Z3 Stage 3 reported `x = 2³⁰` (you chose
-  a 32-bit `BitVec`); ESBMC reports `x = 2⁶³ − 1`, because it models a
-  Python `int` as **64-bit**. Same overflow, different width.
+- **Which integers?** By **default** ESBMC models a Python `int` as a
+  64-bit machine word, so it reports the overflow witness `x = 2⁶³ − 1`
+  (vs `x = 2³⁰` in the 32-bit `BitVec` Z3 version). But real CPython ints
+  are *unbounded*, so that overflow never happens — it's a modelling
+  artifact. Re-run with **`esbmc stage3_esbmc.py --ir`** (unbounded
+  integer/real arithmetic, matching CPython's bignums) and the witness
+  becomes `x = -1`, which *does* reproduce in real Python.
+- Prove it: **`python3 stage3_ir_reproduce.py`** feeds both witnesses to
+  the function under plain CPython — the `2⁶³` one holds, the `--ir` one
+  (`x = -1`) raises `AssertionError`. (`--ir-ieee` adds IEEE-754 for reals.)
 - This is the literal version of "doing ESBMC's job by hand": compare who
   writes the formula and who solves it in each file.
 
