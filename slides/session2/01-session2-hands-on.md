@@ -194,11 +194,18 @@ mathematics.)*
 
 # Checkpoint before Lab 2
 
-## What does `unsat` mean in Stage 1?
-## What does `unsat` mean in Stage 3?
+**Stage 1** — were two Boolean formulas equivalent? (you encoded `lhs ≠ rhs`)
+→ *what does `unsat` mean here?*
 
-Same verdict — two different questions answered. If you can articulate
-the difference, you understand verification.
+**Stage 3** — a 3-line C function as SSA equations, assertion negated
+→ *what does `unsat` mean here?*
+
+Same verdict — two different questions answered (**equivalence** vs. *a
+program is safe*). If you can articulate the difference, you understand
+verification.
+
+*Why 1 and 3, not 2? Both are `unsat` = a proof. Stage 2 (SEND + MORE =
+MONEY) is the other mode: `sat` = a solution.*
 
 ---
 

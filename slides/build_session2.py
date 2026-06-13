@@ -173,12 +173,18 @@ add_body(s, [
 
 s = add_slide(prs, "Checkpoint before Lab 2")
 add_body(s, [
-    "What does unsat mean in Stage 1?",
-    "What does unsat mean in Stage 3?",
+    "Stage 1 — are two Boolean formulas equivalent? (you encoded lhs ≠ rhs)",
+    ("What does unsat mean here?", 1),
+    "Stage 3 — a 3-line C function as SSA equations, assertion negated",
+    ("What does unsat mean here?", 1),
     "",
-    "Same verdict — two different questions answered. If you can "
-    "articulate the difference, you understand verification.",
-], top=2.2, size=28)
+    "Same verdict — two different questions answered "
+    "(equivalence vs. a program is safe). If you can articulate the "
+    "difference, you understand verification.",
+    "",
+    ("Why 1 and 3, not 2? Both are unsat = a proof. Stage 2 "
+     "(SEND + MORE = MONEY) is the other mode: sat = a solution.", 1),
+], top=2.0, size=24)
 
 s = add_slide(prs, "Lab 2 — Bug hunting (40 min)")
 add_body(s, ["predict → verify → READ THE COUNTEREXAMPLE → "
