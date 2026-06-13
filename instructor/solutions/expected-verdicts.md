@@ -21,6 +21,8 @@ ESBMC version first.
 | `labs/lab3/unwind.c` | `--unwind 5` / `--unwind 20` | FAILED | *unwinding assertion* (bound too small — not a program bug) |
 | `labs/lab3/unwind.c` | `--unwind 60` | **SUCCESSFUL** | loop fully unwound (MAX=50 < 60) — a complete proof for this program |
 | `labs/lab3/unwind.c` | `--k-induction` | **UNKNOWN** | "Unable to prove or falsify" — deliberate stretch-task outcome; the assertion is not k-inductive without the invariant `sum == 2*i` |
+| `labs/lab3/contract.c` | `esbmc contract.c --enforce-contract clamp` | FAILED | `contract ensures` (`return_value >= lo && return_value <= hi`), e.g. `hi = -2`: the seeded `x > hi` branch returns `x`, exceeding `hi`. 2 VCCs. Fix the branch to `return hi;` ⇒ **SUCCESSFUL**. |
+| `labs/lab3/contract.c` | `esbmc contract.c --replace-call-with-contract clamp` | **SUCCESSFUL** | modular: the `clamp(x,lo,hi)` call is replaced by *assume requires; havoc; assume ensures*, so the caller's `assert(r >= lo && r <= hi)` holds from the contract alone (body not re-analysed). **NB:** `--enforce-contract` only checks a contract if the function is reachable — `main()` must call it, else it reports SUCCESSFUL vacuously. |
 | `labs/lab4/race.c` | `esbmc race.c --context-bound 2` | FAILED | `assert(g == 1)` in t1 under interleaving t1:g=1 → t2:g=2 → t1:assert |
 | `labs/lab4/float.c` | `esbmc float.c` | FAILED | `assert(w == z)` — 0.1+0.2 ≠ 0.3 in binary64 |
 

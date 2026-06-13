@@ -287,6 +287,27 @@ add_body(s, [
     "One nondet input = all tests of that input at once.",
 ])
 
+s = add_slide(prs, "Specifications, one level up: function contracts")
+add_body(s, [
+    ("int clamp(int x, int lo, int hi) {", 0, True),
+    ("  __ESBMC_requires(lo <= hi);                  // caller's duty",
+     0, True),
+    ("  __ESBMC_ensures(__ESBMC_return_value >= lo); // the promise",
+     0, True),
+    ("  __ESBMC_ensures(__ESBMC_return_value <= hi); ...", 0, True),
+    "",
+    ("--enforce-contract clamp — does the body keep its promise? "
+     "(seeded bug → contract ensures counterexample → fix → SUCCESSFUL)",
+     1),
+    ("--replace-call-with-contract clamp — callers trust the contract, "
+     "not the body: assume requires; havoc; assume ensures. Modular.", 1),
+    ("Gotcha: the function must be called, or there is nothing to "
+     "enforce.", 1),
+    "",
+    "Deductive verification in miniature — Session 1's Dafny / Frama-C / "
+    "SPARK row, on ESBMC. (labs/lab3/contract.c)",
+], size=19)
+
 s = add_slide(prs, "Lab 3, Part 2 — what did we prove?")
 add_body(s, [
     ("esbmc unwind.c --unwind 5      →  ?", 0, True),

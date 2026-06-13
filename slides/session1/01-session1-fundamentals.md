@@ -696,6 +696,27 @@ assert(property(x));               /* must hold for ALL of them */
 
 ---
 
+# Specifying functions: contracts (pre/post)
+
+A **Hoare triple** `{P} S {Q}`: if precondition **P** holds before `S`,
+postcondition **Q** holds after. Design-by-contract splits the duty:
+
+- **requires** (precondition) — the **caller's** duty before the call.
+- **ensures** (postcondition) — the **function's** promise on return.
+
+Why it matters: **verify each function once against its contract**, then
+callers trust the contract — *not* the body. That is **modular**
+(assume-guarantee) verification, and it is how proof scales.
+
+The engine of the **deductive-verification** row (Dafny, Frama-C/WP, SPARK).
+ESBMC has it too: `__ESBMC_requires` / `__ESBMC_ensures`, with
+`--enforce-contract` vs `--replace-call-with-contract` (Session 2, Lab 3).
+
+*Hoare, CACM 1969 (doi:10.1145/363235.363259) · Meyer, IEEE Computer 1992
+(doi:10.1109/2.161279)*
+
+---
+
 # Beyond one thread
 
 - Two threads of two and one statements already have three

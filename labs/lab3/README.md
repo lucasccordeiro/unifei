@@ -39,3 +39,33 @@ esbmc unwind.c --unwind 60
   ESBMC 8.3.0 it answers `VERIFICATION UNKNOWN` — it can neither prove
   nor refute. Why is the unbounded question fundamentally harder than
   the bounded one? (Keyword to take home: *loop invariant*.)
+
+## Part 3 (optional): function contracts — `contract.c`
+
+Specify the **function**, not every call site. A contract attaches the
+spec to the function itself:
+
+- `__ESBMC_requires(P)` — the precondition the caller must establish.
+- `__ESBMC_ensures(Q)` — the postcondition the function promises
+  (`__ESBMC_return_value` is the result).
+
+`contract.c` defines `clamp(x, lo, hi)` with a contract and a **seeded
+bug**. Two complementary checks:
+
+```bash
+esbmc contract.c --enforce-contract clamp          # does the body keep its promise?
+esbmc contract.c --replace-call-with-contract clamp # verify callers from the contract alone
+```
+
+1. `--enforce-contract` → `VERIFICATION FAILED`, `contract ensures`. Read
+   the counterexample, fix `clamp` (the `x > hi` branch), re-run to
+   `SUCCESSFUL`.
+2. `--replace-call-with-contract` replaces the call by *assume requires;
+   havoc; assume ensures* — the body is **not** re-analysed. That is
+   **modular** (assume-guarantee) verification: enforce a contract once,
+   then every caller reasons against it. This is deductive verification's
+   core idea (Session 1: Dafny, Frama-C/WP, SPARK).
+
+**Gotcha:** a contract is only checked if the function is **reachable** —
+`main()` must call it, or `--enforce-contract` has nothing to do and
+reports `SUCCESSFUL` vacuously.
