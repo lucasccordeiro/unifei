@@ -74,6 +74,9 @@ invariant: no bound, no search.
 - ESBMC ships it too — `--interval-analysis` — feeding the invariant
   **k-induction** needs for `unwind.c` (Lab 3).
 
+*Sound over-approximation: Cousot & Cousot, POPL 1977
+(doi:10.1145/512950.512973).*
+
 ---
 
 # Lab 1 — Constraint solving (35 min)

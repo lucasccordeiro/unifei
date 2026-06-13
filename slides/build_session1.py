@@ -729,6 +729,8 @@ add_body(s, [
     ("Sound, not complete: too coarse → a false alarm. (Astrée proved the "
      "A340/A380 fly-by-wire this way — next slide.)", 1),
 ], size=20)
+add_body(s, ["Sound over-approximation: Cousot & Cousot, POPL 1977 "
+             "(doi:10.1145/512950.512973)"], top=7.0, size=14)
 
 s = add_slide(prs, "Abstract interpretation: domain, widening, narrowing")
 add_body(s, [

@@ -64,6 +64,8 @@ add_body(s, [
     ("ESBMC ships it too — --interval-analysis — feeding the invariant "
      "k-induction needs for unwind.c (Lab 3).", 1),
 ], top=2.0, size=24)
+add_body(s, ["Sound over-approximation: Cousot & Cousot, POPL 1977 "
+             "(doi:10.1145/512950.512973)"], top=7.0, size=14)
 
 s = add_slide(prs, "Lab 1 — Constraint solving (35 min)")
 add_body(s, [

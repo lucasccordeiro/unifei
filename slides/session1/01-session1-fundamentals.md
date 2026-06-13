@@ -783,6 +783,9 @@ assert 0 <= x <= 100  # implied by the invariant → PROVED, no unrolling
 - **Sound, not complete:** too coarse → a *false alarm*. (Astrée proved the
   A340/A380 fly-by-wire this way — next slide.)
 
+*Sound over-approximation: Cousot & Cousot, POPL 1977
+(doi:10.1145/512950.512973).*
+
 ---
 
 # Abstract interpretation: domain, widening, narrowing
