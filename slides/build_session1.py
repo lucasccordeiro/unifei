@@ -712,6 +712,44 @@ add_body(s, [
     "effectiveness",
 ])
 
+s = add_slide(prs, "Another route to a proof: abstract interpretation")
+add_body(s, [
+    "The BMC pipeline you just saw hunts a counterexample (or proves up "
+    "to a bound). Abstract interpretation proves P the other way — "
+    "over-approximate every run at once: no inputs, no paths, no bound.",
+    "",
+    ("x = 0                 # x ∈ [0, 0]", 0, True),
+    ("while x < 100:", 0, True),
+    ("    x = x + 1         # x ∈ [1, 100]", 0, True),
+    ("# fixpoint invariant:  x ∈ [0, 100]", 0, True),
+    ("assert 0 <= x <= 100  # implied by the invariant → PROVED", 0, True),
+    "",
+    ("Compute the tightest fact the loop can't escape (a fixpoint); if it "
+     "implies P, P holds for every run — no unrolling.", 1),
+    ("Sound, not complete: too coarse → a false alarm. (Astrée proved the "
+     "A340/A380 fly-by-wire this way — next slide.)", 1),
+], size=20)
+
+s = add_slide(prs, "Abstract interpretation: domain, widening, narrowing")
+add_body(s, [
+    ("Abstract domain — the facts you track instead of exact values. "
+     "Intervals x ∈ [a, b]; richer ones add relationships (octagons "
+     "±x ±y ≤ c, polyhedra). At a branch you join the two sides — richer "
+     "domain → more precise, but more costly.", 1),
+    "",
+    ("Widening (∇) — forces loops to converge. The loop ascends "
+     "[0,0] → [0,1] → [0,2] → … and may never stop; widening sees the "
+     "bound climbing and extrapolates it to [0, +∞). Termination, at the "
+     "cost of precision.", 1),
+    "",
+    ("Narrowing (Δ) — recovers what widening overshot. Re-reading the "
+     "guard x < 100 pulls [0, +∞) back to [0, 100]: precision restored, "
+     "still terminating.", 1),
+    "",
+    "ESBMC ships it too — --interval-analysis — and can supply the "
+    "invariant k-induction needs (Session 2, Lab 3).",
+], size=20)
+
 s = add_slide(prs, "Who uses this? — Proofs all the way up")
 add_body(s, [
     "Astrée (abstract interpretation) proved absence of runtime errors "

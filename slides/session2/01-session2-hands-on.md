@@ -60,6 +60,22 @@ specifications — is this one move in different costumes.
 
 ---
 
+# Another route to a proof: abstract interpretation
+
+Tonight's trick hunts a **counterexample**. Abstract interpretation proves
+**P** the other way — **over-approximate every run at once** to a fixpoint
+invariant: no bound, no search.
+
+- You met the mechanism in **Session 1**: abstract domain, widening (∇),
+  narrowing (Δ) — iterate to a **fixpoint**; if it implies P, P holds for
+  **every** run.
+- **Sound, not complete:** too coarse an over-approximation → a *false
+  alarm*. (Astrée proved the A380 fly-by-wire this way.)
+- ESBMC ships it too — `--interval-analysis` — feeding the invariant
+  **k-induction** needs for `unwind.c` (Lab 3).
+
+---
+
 # Lab 1 — Constraint solving (35 min)
 
 `labs/lab1/lab1.py` — three stages, instructions inside.

@@ -50,6 +50,21 @@ add_body(s, [
     "specifications — is this one move in different costumes.",
 ], top=2.0, size=26)
 
+s = add_slide(prs, "Another route to a proof: abstract interpretation")
+add_body(s, [
+    "Tonight's trick hunts a counterexample. Abstract interpretation "
+    "proves P the other way — over-approximate every run at once to a "
+    "fixpoint invariant: no bound, no search.",
+    "",
+    ("You met the mechanism in Session 1: abstract domain, widening (∇), "
+     "narrowing (Δ) — iterate to a fixpoint; if it implies P, P holds for "
+     "every run.", 1),
+    ("Sound, not complete: too coarse an over-approximation → a false "
+     "alarm. (Astrée proved the A380 fly-by-wire this way.)", 1),
+    ("ESBMC ships it too — --interval-analysis — feeding the invariant "
+     "k-induction needs for unwind.c (Lab 3).", 1),
+], top=2.0, size=24)
+
 s = add_slide(prs, "Lab 1 — Constraint solving (35 min)")
 add_body(s, [
     "labs/lab1/lab1.py — three stages, instructions inside.",
