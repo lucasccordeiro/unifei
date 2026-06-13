@@ -161,9 +161,9 @@ add_body(s, [
     ("Default blames x = 2^63 - 1 — but Python ints are unbounded, so that "
      "overflow never happens (z stays huge, z ≥ 2 holds). A modelling "
      "artifact.", 1),
-    ("--ir blames x = -1 → z = 0 < 2, which reproduces in real Python. "
-     "Unbounded integer/real matches CPython's bignums — and is often "
-     "faster.", 1),
+    ("--ir blames x = -1 → z = 0 < 2 — reproduces in CPython: "
+     "python3 stage3_ir_reproduce.py → AssertionError. Unbounded "
+     "integer/real matches Python's bignums, and is often faster.", 1),
     ("--ir-ieee adds IEEE-754 enclosure for reals — the honest model once "
      "floats appear (Lab 4, float.c).", 1),
     "",
