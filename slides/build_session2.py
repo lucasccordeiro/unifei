@@ -143,9 +143,33 @@ add_body(s, [
     ("You wrote the function; ESBMC wrote AND solved the formula.", 1),
     ("Z3 is the SMT engine; ESBMC is a model checker built ON it — it "
      "calls Z3 underneath.", 1),
-    ("Same bug, different number: 2^30 (your 32-bit BitVec) vs 2^63 — "
-     "ESBMC models a Python int as 64-bit.", 1),
+    ("Same overflow, wider word: 2^30 (your 32-bit BitVec) vs 2^63 "
+     "(ESBMC's default 64-bit int). But should a Python int overflow at "
+     "all? → next slide.", 1),
 ], size=22)
+
+s = add_slide(prs, "Which integers? machine word vs math (--ir)")
+add_body(s, [
+    "Both runs print VERIFICATION FAILED — but only one counterexample is "
+    "real in CPython:",
+    "",
+    ("esbmc stage3_esbmc.py        →  x = 2^63 - 1   default: int = 64-bit "
+     "machine word", 0, True),
+    ("esbmc stage3_esbmc.py --ir   →  x = -1         --ir: unbounded "
+     "integer/real", 0, True),
+    "",
+    ("Default blames x = 2^63 - 1 — but Python ints are unbounded, so that "
+     "overflow never happens (z stays huge, z ≥ 2 holds). A modelling "
+     "artifact.", 1),
+    ("--ir blames x = -1 → z = 0 < 2, which reproduces in real Python. "
+     "Unbounded integer/real matches CPython's bignums — and is often "
+     "faster.", 1),
+    ("--ir-ieee adds IEEE-754 enclosure for reals — the honest model once "
+     "floats appear (Lab 4, float.c).", 1),
+    "",
+    "Match the integer model to your program. (Session 1: machine "
+    "arithmetic ≠ mathematics.)",
+], size=20)
 
 s = add_slide(prs, "Checkpoint before Lab 2")
 add_body(s, [

@@ -162,8 +162,33 @@ f(x)
 - You wrote the function; **ESBMC wrote AND solved** the formula.
 - Z3 is the SMT engine; ESBMC is a model checker built **on** it — it
   calls Z3 underneath.
-- Same bug, different number: `2³⁰` (your 32-bit `BitVec`) vs `2⁶³` —
-  ESBMC models a Python `int` as **64-bit**.
+- Same overflow, wider word: `2³⁰` (your 32-bit `BitVec`) vs `2⁶³`
+  (ESBMC's default 64-bit `int`). But should a Python `int` overflow at
+  all? → next slide.
+
+---
+
+# Which integers? machine word vs math (`--ir`)
+
+Both runs print `VERIFICATION FAILED` — but only one counterexample is real
+in CPython:
+
+```
+esbmc stage3_esbmc.py        →  x = 2⁶³ − 1   default: int = 64-bit machine word
+esbmc stage3_esbmc.py --ir   →  x = -1        --ir: unbounded integer/real
+```
+
+- **Default** blames `x = 2⁶³−1` — but Python ints are *unbounded*, so that
+  overflow never happens (`z` stays huge, `z ≥ 2` holds). A **modelling
+  artifact**.
+- **`--ir`** blames `x = -1` → `z = 0 < 2`, which **reproduces in real
+  Python**. Unbounded integer/real matches CPython's bignums — and is often
+  faster.
+- **`--ir-ieee`** adds **IEEE-754** enclosure for *reals* — the honest
+  model once floats appear (Lab 4, `float.c`).
+
+Match the integer model to your program. *(Session 1: machine arithmetic ≠
+mathematics.)*
 
 ---
 
