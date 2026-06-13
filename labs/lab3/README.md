@@ -57,15 +57,26 @@ esbmc contract.c --enforce-contract clamp          # does the body keep its prom
 esbmc contract.c --replace-call-with-contract clamp # verify callers from the contract alone
 ```
 
-1. `--enforce-contract` → `VERIFICATION FAILED`, `contract ensures`. Read
-   the counterexample, fix `clamp` (the `x > hi` branch), re-run to
-   `SUCCESSFUL`.
-2. `--replace-call-with-contract` replaces the call by *assume requires;
-   havoc; assume ensures* — the body is **not** re-analysed. That is
+1. **Enforce** (`--enforce-contract`): *assume* the precondition, run the
+   body, *assert* the postcondition **and the frame**. This discharges
+   "the implementation meets its contract." Here it reports
+   `VERIFICATION FAILED`, `contract ensures` — read the counterexample,
+   fix `clamp` (the `x > hi` branch), re-run to `SUCCESSFUL`.
+2. **Replace** (`--replace-call-with-contract`): at each call site,
+   *assert* the precondition, *havoc* the frame, and *assume* the
+   postcondition — the callee's body is **not** unrolled. This lets a
+   caller be verified against the *specification* of its callees. That is
    **modular** (assume-guarantee) verification: enforce a contract once,
    then every caller reasons against it. This is deductive verification's
    core idea (Session 1: Dafny, Frama-C/WP, SPARK).
 
+The **frame** (`__ESBMC_assigns(...)`) names the locations a call may
+modify and asserts every other location is left unchanged — the *frame
+problem*, and what makes modular reasoning sound. `clamp` writes nothing
+through pointers, so its frame is empty.
+
 **Gotcha:** a contract is only checked if the function is **reachable** —
 `main()` must call it, or `--enforce-contract` has nothing to do and
 reports `SUCCESSFUL` vacuously.
+
+*Reference: ESBMC docs — esbmc.github.io/docs/theory/function-contracts*

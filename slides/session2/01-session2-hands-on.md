@@ -327,10 +327,14 @@ int clamp(int x, int lo, int hi) {
 }
 ```
 
-- `--enforce-contract clamp` — does the **body** keep its promise? (seeded
-  bug → `contract ensures` counterexample → fix → SUCCESSFUL)
-- `--replace-call-with-contract clamp` — callers trust the **contract**, not
-  the body: *assume requires; havoc; assume ensures*. **Modular**.
+- **Enforce** (`--enforce-contract`): *assume* requires → run body →
+  *assert* ensures (+ frame). Proves the implementation meets its contract
+  (bug → `contract ensures` → fix → SUCCESSFUL).
+- **Replace** (`--replace-call-with-contract`): at a call → *assert*
+  requires → *havoc* frame → *assume* ensures. Verifies a caller against its
+  callees' specs, **without unrolling their bodies**. Modular.
+- **Frame** (`__ESBMC_assigns`) = the locations a call may change; every
+  other location is asserted unchanged (`clamp` writes none).
 - Gotcha: the function must be **called**, or there is nothing to enforce.
 
 Deductive verification in miniature — Session 1's Dafny / Frama-C / SPARK
