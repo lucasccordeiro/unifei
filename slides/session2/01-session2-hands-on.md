@@ -71,6 +71,8 @@ specifications — is this one move in different costumes.
   ESBMC's job by hand.
 
 **Predict before every run:** write your guess as a comment first.
+**Box B (optional):** re-run Stage 3 as Python ESBMC checks for you —
+`stage3_esbmc.py`.
 
 ---
 
@@ -128,6 +130,27 @@ Would your test suite have tried 1073741824?
 
 ---
 
+# Box B: hand that same Python to ESBMC
+
+```python
+def f(x: int) -> int:
+    y = x + 1
+    z = y * 2
+    assert z >= 2        # ESBMC negates this for you
+x: int = nondet_int()    # every int at once, like BitVec("x")
+f(x)
+```
+
+`esbmc stage3_esbmc.py` → `VERIFICATION FAILED` (`x = 2⁶³ − 1`)
+
+- You wrote the function; **ESBMC wrote AND solved** the formula.
+- Z3 is the SMT engine; ESBMC is a model checker built **on** it — it
+  calls Z3 underneath.
+- Same bug, different number: `2³⁰` (your 32-bit `BitVec`) vs `2⁶³` —
+  ESBMC models a Python `int` as **64-bit**.
+
+---
+
 # Checkpoint before Lab 2
 
 ## What does `unsat` mean in Stage 1?
@@ -151,6 +174,8 @@ predict → verify → **read the counterexample** → fix → re-verify
 
 Done = `VERIFICATION SUCCESSFUL` on your fixed file, same flags.
 Finished early? You are now a TA — help the pair next to you.
+
+**Box B (optional):** `esbmc safe_div.py` — same loop, Python input.
 
 ---
 

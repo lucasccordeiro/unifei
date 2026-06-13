@@ -55,3 +55,13 @@ violated. Other runs may surface Property 3 directly with inputs like
 - `instructor/solutions/lab1_solution.py` — Stage 1 adds 1d NOT
   equivalent; Stage 2 prints the unique model `9567 + 1085 = 10652`;
   Stage 3 Q3 prints `sat` (overflow persists even with `x >= 0`).
+
+## Box B — optional ESBMC-on-Python exercises (verified 2026-06-13, ESBMC 8.3.0)
+
+These run under **`esbmc`**, not `python3` (`nondet_int` / `__ESBMC_assume`
+are ESBMC intrinsics). Same evening trick, Python input.
+
+| File | Command | Verdict | Notes |
+|---|---|---|---|
+| `labs/lab1/stage3_esbmc.py` | `esbmc stage3_esbmc.py` | FAILED | `assertion z >= 2`; counterexample `x = 9223372036854775807` (2⁶³−1). Same overflow as Z3 Stage 3, but ESBMC models a Python `int` as **64-bit**, so the witness is 2⁶³ here vs 2³⁰ in the 32-bit `BitVec` version. Q2 stretch (`__ESBMC_assume(x >= 0)`) still FAILS at the same value. |
+| `labs/lab2/safe_div.py` | `esbmc safe_div.py` | FAILED | `division by zero`, CWE-369; solver picks `b = 0`. Fix = add `__ESBMC_assume(b != 0)` ⇒ **SUCCESSFUL**. |

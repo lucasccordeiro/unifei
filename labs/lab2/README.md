@@ -31,6 +31,21 @@ properly: `fgets(buf, sizeof(buf), stdin)`, and mind the trailing newline
 to match (a `char buf[8]` needs `--unwind 10`) — can you explain why the
 bound depends on your fix? That question is the bridge to Lab 3.
 
+## Box B (optional) — the same tool on Python
+
+`esbmc` is not C-only. [`safe_div.py`](safe_div.py) is a Python program
+with a built-in bug: it guards its first argument but forgets the other
+way integer division crashes.
+
+```
+esbmc safe_div.py        # -> VERIFICATION FAILED: division by zero (CWE-369)
+```
+
+Read the counterexample (which value of `b`?), add the one missing
+precondition, and re-run to `VERIFICATION SUCCESSFUL` — exactly the
+predict → verify → fix → re-verify loop you just did in C, in a second
+language. Run it under `esbmc`, not `python3`.
+
 ## Checkpoint
 
 For one of your fixed files, explain to your partner *what the tool now

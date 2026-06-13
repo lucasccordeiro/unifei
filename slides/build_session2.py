@@ -60,6 +60,8 @@ add_body(s, [
      "ESBMC's job by hand.", 1),
     "",
     "Predict before every run: write your guess as a comment first.",
+    ("Box B (optional): re-run Stage 3 as Python ESBMC checks for you — "
+     "stage3_esbmc.py.", 1),
 ])
 
 s = add_slide(prs, "Z3's Python API — the whole toolkit")
@@ -111,6 +113,25 @@ add_body(s, [
     "That's Lab 2.",
 ])
 
+s = add_slide(prs, "Box B: hand that same Python to ESBMC")
+add_body(s, [
+    ("def f(x: int) -> int:", 0, True),
+    ("    y = x + 1", 0, True),
+    ("    z = y * 2", 0, True),
+    ("    assert z >= 2        # ESBMC negates this for you", 0, True),
+    ("x: int = nondet_int()    # every int at once, like BitVec(\"x\")",
+     0, True),
+    ("f(x)", 0, True),
+    "",
+    ("esbmc stage3_esbmc.py  →  VERIFICATION FAILED   (x = 2^63 - 1)",
+     0, True),
+    ("You wrote the function; ESBMC wrote AND solved the formula.", 1),
+    ("Z3 is the SMT engine; ESBMC is a model checker built ON it — it "
+     "calls Z3 underneath.", 1),
+    ("Same bug, different number: 2^30 (your 32-bit BitVec) vs 2^63 — "
+     "ESBMC models a Python int as 64-bit.", 1),
+], size=22)
+
 s = add_slide(prs, "Checkpoint before Lab 2")
 add_body(s, [
     "What does unsat mean in Stage 1?",
@@ -133,7 +154,9 @@ add_table(s, [
 add_body(s, ["Done = VERIFICATION SUCCESSFUL on your fixed file, same "
              "flags.",
              "Finished early? You are now a TA — help the pair next to "
-             "you."], top=5.2, size=20)
+             "you.",
+             ("Box B (optional): esbmc safe_div.py — same loop, Python "
+              "input.", 0, True)], top=5.0, size=20)
 
 s = add_slide(prs, "How to read a counterexample")
 add_body(s, [

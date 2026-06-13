@@ -41,6 +41,20 @@ add_body(s, [
     ("Same bug class --overflow-check hunts in Lab 2.", 1),
 ])
 
+s = add_slide(prs, "Box B — ESBMC on Python (optional)")
+add_body(s, [
+    "Run under esbmc, not python3 (intrinsics, not CPython names).",
+    "",
+    "stage3_esbmc.py — FAILED, assertion z >= 2:",
+    ("x = 9223372036854775807 (2^63 - 1). Same overflow as Z3 Stage 3 — "
+     "ESBMC models a Python int as 64-bit, so 2^63 here vs 2^30 there.",
+     1),
+    ("Q2 stretch (__ESBMC_assume(x >= 0)) still FAILS at the same x.", 1),
+    "",
+    "safe_div.py — FAILED, division by zero (CWE-369), b = 0:",
+    ("Fix: __ESBMC_assume(b != 0)  =>  VERIFICATION SUCCESSFUL.", 1, True),
+], size=22)
+
 s = add_slide(prs, "Lab 2 — overflow.c")
 add_body(s, [
     "Verdict: FAILED — solver picks i = -1, x = -1; the write lands on "
@@ -170,7 +184,10 @@ add_table(s, [
      "F / F / S / UNKNOWN", "—"],
     ["race.c", "esbmc race.c --context-bound 2", "FAILED", "SUCCESSFUL"],
     ["float.c", "esbmc float.c", "FAILED", "— (by design)"],
-], top=1.6, size=13, col_widths=[1.9, 4.6, 2.9, 2.3])
+    ["stage3_esbmc.py", "esbmc stage3_esbmc.py", "FAILED", "— (Box B)"],
+    ["safe_div.py", "esbmc safe_div.py", "FAILED",
+     "SUCCESSFUL (assume b!=0)"],
+], top=1.5, size=12, col_widths=[1.9, 4.6, 2.9, 2.3])
 
 prs.save("../instructor/session2-solutions.pptx")
 print(f"saved ../instructor/session2-solutions.pptx with "

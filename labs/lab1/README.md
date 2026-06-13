@@ -19,6 +19,25 @@ The one idea behind the entire evening:
    answer Q1–Q3 in a comment. You have just done, by hand, what ESBMC
    automates in Lab 2.
 
+## Box B (optional) — hand Stage 3 to ESBMC
+
+ESBMC verifies **Python**, not just C. [`stage3_esbmc.py`](stage3_esbmc.py)
+is the *same* function as Stage 3, written in Python — but you no longer
+encode SSA equations by hand. You write the function; ESBMC builds the
+formula and solves it (with Z3/Bitwuzla underneath).
+
+```
+esbmc stage3_esbmc.py        # -> VERIFICATION FAILED
+```
+
+- Run it under **`esbmc`**, not `python3` — `nondet_int()` is an ESBMC
+  intrinsic, not a CPython function.
+- Same bug, **different number**: Z3 Stage 3 reported `x = 2³⁰` (you chose
+  a 32-bit `BitVec`); ESBMC reports `x = 2⁶³ − 1`, because it models a
+  Python `int` as **64-bit**. Same overflow, different width.
+- This is the literal version of "doing ESBMC's job by hand": compare who
+  writes the formula and who solves it in each file.
+
 ## Checkpoint (before Lab 2)
 
 Be able to answer out loud: *what does `unsat` mean in Stage 1, and what
